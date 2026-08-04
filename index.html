@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AtonCommunication</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --card: #1a222c;
+      --text: #f3f5f7;
+      --muted: #9aa6b2;
+      --accent: #c8a96b;
+      --line: #2a3540;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      background:
+        radial-gradient(1200px 600px at 10% -10%, #243041 0%, transparent 55%),
+        radial-gradient(900px 500px at 100% 0%, #1d2a22 0%, transparent 50%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .wrap {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 56px 24px 80px;
+    }
+    .brand {
+      font-size: clamp(2.4rem, 6vw, 3.6rem);
+      letter-spacing: 0.02em;
+      margin: 0 0 12px;
+      font-weight: 700;
+    }
+    .lead {
+      margin: 0 0 40px;
+      color: var(--muted);
+      font-size: 1.1rem;
+      max-width: 36em;
+      line-height: 1.5;
+    }
+    .grid {
+      display: grid;
+      gap: 14px;
+    }
+    .card {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 18px 20px;
+      background: color-mix(in srgb, var(--card) 92%, transparent);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      text-decoration: none;
+      color: inherit;
+      transition: border-color .2s, transform .2s, background .2s;
+    }
+    .card:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+      background: #212b36;
+    }
+    .card-title { font-size: 1.15rem; }
+    .card-meta {
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    footer {
+      margin-top: 48px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <h1 class="brand">AtonCommunication</h1>
+    <p class="lead">Интерактивные HTML-материалы. Откройте нужную страницу и отправьте коллегам прямую ссылку.</p>
+    <div class="grid">
+      <a class="card" href="./aton-study-proctoring-onepager/">
+        <span class="card-title">ATON Study: тестирование и прокторинг (onepager)</span>
+        <span class="card-meta">aton-study-proctoring-onepager/</span>
+      </a>
+      <a class="card" href="./aton-study-proctoring/">
+        <span class="card-title">ATON Study: тестирование и прокторинг</span>
+        <span class="card-meta">aton-study-proctoring/</span>
+      </a>
+      <a class="card" href="./c2c-vitrina-process/">
+        <span class="card-title">C2C: Витрина интересов — процесс</span>
+        <span class="card-meta">c2c-vitrina-process/</span>
+      </a>
+      <a class="card" href="./c2c-vitrina-steps/">
+        <span class="card-title">C2C: Витрина интересов — пошагово</span>
+        <span class="card-meta">c2c-vitrina-steps/</span>
+      </a>
+      <a class="card" href="./finex-faq/">
+        <span class="card-title">FinEx FAQ</span>
+        <span class="card-meta">finex-faq/</span>
+      </a>
+      <a class="card" href="./finex-faq-print/">
+        <span class="card-title">FinEx FAQ (печать)</span>
+        <span class="card-meta">finex-faq-print/</span>
+      </a>
+      <a class="card" href="./deposits-ul/">
+        <span class="card-title">Депозиты ЮЛ</span>
+        <span class="card-meta">deposits-ul/</span>
+      </a>
+      <a class="card" href="./yield-calculator/">
+        <span class="card-title">Калькулятор доходности</span>
+        <span class="card-meta">yield-calculator/</span>
+      </a>
+      <a class="card" href="./repo-ck/">
+        <span class="card-title">РЕПО с ЦК</span>
+        <span class="card-meta">repo-ck/</span>
+      </a>
+      <a class="card" href="./repo-ck-instruction/">
+        <span class="card-title">РЕПО с ЦК — инструкция</span>
+        <span class="card-meta">repo-ck-instruction/</span>
+      </a>
+      <a class="card" href="./deposit-rate/">
+        <span class="card-title">Ставка по вкладу</span>
+        <span class="card-meta">deposit-rate/</span>
+      </a>
+      <a class="card" href="./orderbook-c2c/">
+        <span class="card-title">Стакан клиент–клиент</span>
+        <span class="card-meta">orderbook-c2c/</span>
+      </a>
+    </div>
+    <footer>Публикация через GitHub Pages</footer>
+  </main>
+</body>
+</html>

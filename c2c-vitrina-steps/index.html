@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>АТОН — Процесс клиент–клиент (step by step)</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#1a1a1a;font-family:'Graphik',Arial,sans-serif;display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:24px}
+.viewport{width:1280px;height:720px;background:#fff;position:relative;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.4)}
+.slide{display:none;width:100%;height:100%;padding:48px 64px 40px;color:#000;flex-direction:column}
+.slide.active{display:flex}
+.slide.purple{background:#7000FF;color:#fff}
+h1{font-size:44px;font-weight:700;line-height:1.15}
+h2{font-size:32px;font-weight:700;line-height:1.2;margin-bottom:14px}
+.kicker{font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#7000FF;margin-bottom:12px}
+.slide.purple .kicker{color:#e6d9ff}
+.subtitle{font-size:20px;color:#e6d9ff;margin-top:20px;line-height:1.45;max-width:820px}
+.body{flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;min-height:0}
+.note{font-size:12px;color:#999;margin-top:auto}
+.slide.purple .note{color:#d4c4ff}
+.slide-num{position:absolute;bottom:18px;right:32px;font-size:12px;color:#bbb}
+.slide.purple .slide-num{color:#d4c4ff}
+.progress{position:absolute;top:0;left:0;height:4px;background:#7000FF;transition:width .2s;z-index:2}
+
+.step-meta{font-size:14px;font-weight:700;color:#7000FF;letter-spacing:.06em;text-transform:uppercase;margin-bottom:20px}
+.hero{display:flex;gap:28px;align-items:flex-start}
+.num{flex:0 0 auto;width:80px;height:80px;border-radius:50%;background:#7000FF;color:#fff;font-size:36px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.text{flex:1;min-width:0}
+.desc{font-size:20px;line-height:1.5;color:#333;margin-bottom:22px;max-width:920px}
+
+.who{display:inline-block;background:#f0eafc;color:#7000FF;font-size:13px;font-weight:700;padding:6px 12px;border-radius:6px;margin-bottom:14px;letter-spacing:.02em}
+
+.items{display:flex;flex-direction:column;gap:10px}
+.item{display:flex;align-items:center;gap:14px;background:#f5f5f5;border-radius:10px;padding:14px 18px;font-size:17px;line-height:1.4;color:#222}
+.item .i{flex:0 0 auto;width:28px;height:28px;border-radius:50%;background:#7000FF;color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.item.stop{background:#fdecea}
+.item.stop .i{background:#c62828}
+.item.ok{background:#eef8ef}
+.item.ok .i{background:#2e7d32}
+
+.flow-row{display:flex;align-items:center;gap:0;margin-top:8px}
+.flow-box{flex:1;background:#f5f5f5;border-radius:12px;padding:18px 12px;text-align:center;min-height:110px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.flow-box .n{width:34px;height:34px;border-radius:50%;background:#7000FF;color:#fff;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-bottom:8px}
+.flow-box p{font-size:14px;line-height:1.3;font-weight:700;color:#222}
+.flow-arrow{flex:0 0 28px;text-align:center;font-size:20px;color:#bbb;font-weight:700}
+
+.tip{margin-top:20px;background:#7000FF;color:#fff;border-radius:12px;padding:16px 20px;font-size:17px;line-height:1.45}
+.tip strong{font-weight:700}
+
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.card{background:#f5f5f5;border-radius:12px;padding:20px 18px}
+.card h3{font-size:17px;font-weight:700;margin-bottom:8px}
+.card p{font-size:15px;line-height:1.45;color:#333}
+.card.stop{background:#fdecea}
+.card.stop h3{color:#c62828}
+.card.lot{background:#f0eafc}
+.card.lot h3{color:#7000FF}
+
+.ex{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ex-box{border-radius:10px;padding:14px 16px;font-size:15px;line-height:1.4}
+.ex-box.bad{background:#fdecea;color:#7f1d1d}
+.ex-box.good{background:#eef8ef;color:#14532d}
+.ex-box strong{display:block;margin-bottom:4px}
+
+.cover{justify-content:space-between;padding:48px 64px}
+.cover-mid{margin-top:auto;margin-bottom:auto}
+.foot{display:flex;justify-content:space-between;font-size:14px;color:#e6d9ff}
+
+.nav{margin-top:16px;display:flex;gap:12px;align-items:center;color:#fff}
+.nav button{background:#7000FF;color:#fff;border:none;padding:10px 20px;font-size:14px;cursor:pointer;border-radius:4px;font-family:inherit}
+.nav button:disabled{opacity:.4;cursor:default}
+.counter{font-size:14px;min-width:90px;text-align:center}
+</style>
+</head>
+<body>
+<div class="viewport">
+<div class="progress" id="progress"></div>
+
+<!-- 1 Cover -->
+<section class="slide purple active cover">
+  <div class="cover-mid">
+    <p class="kicker">Торговля · Витрина интересов</p>
+    <h1>Сделка клиент–клиент<br>пошагово</h1>
+    <p class="subtitle">От интереса менеджера до торгового поручения в ATON Line</p>
+  </div>
+  <div class="foot">
+    <span>Август 2026</span>
+    <span>Внутренний документ</span>
+  </div>
+  <div class="slide-num">1</div>
+</section>
+
+<!-- 2 Overview -->
+<section class="slide">
+  <p class="kicker">Весь процесс</p>
+  <h2>Одна линия из 7 шагов</h2>
+  <div class="body">
+    <div class="flow-row">
+      <div class="flow-box"><div class="n">1</div><p>Создать<br>интерес</p></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box"><div class="n">2</div><p>Авто-<br>проверки</p></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box"><div class="n">3</div><p>Цена<br>±20%</p></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box"><div class="n">4</div><p>Клиент<br>подтверждает</p></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box"><div class="n">5</div><p>Витрина<br>и matching</p></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box"><div class="n">6</div><p>Реальные<br>приказы</p></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box"><div class="n">7</div><p>Подпись<br>поручения</p></div>
+    </div>
+    <div class="tip"><strong>Ключ:</strong> до шага 6 активы не блокируются. Санкционные клиенты не проходят ни на интересах, ни на приказах.</div>
+  </div>
+  <div class="slide-num">2</div>
+</section>
+
+<!-- 3 Step 1 -->
+<section class="slide">
+  <div class="step-meta">Шаг 1 из 7</div>
+  <div class="body" style="justify-content:flex-start">
+    <div class="hero">
+      <div class="num">1</div>
+      <div class="text">
+        <div class="who">Менеджер</div>
+        <h2>Создаёт интерес</h2>
+        <p class="desc">В разделе «Торговля → Интересы» заполняет параметры заявки.</p>
+        <div class="items">
+          <div class="item"><span class="i">1</span>Актив — название и ISIN</div>
+          <div class="item"><span class="i">2</span>Счёт клиента</div>
+          <div class="item"><span class="i">3</span>Сторона — покупка или продажа</div>
+          <div class="item"><span class="i">4</span>Объём, цена и срок интереса</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num">3</div>
+</section>
+
+<!-- 4 Step 2 checks -->
+<section class="slide">
+  <div class="step-meta">Шаг 2 из 7</div>
+  <div class="body" style="justify-content:flex-start">
+    <div class="hero">
+      <div class="num">2</div>
+      <div class="text">
+        <div class="who">Система · жёсткие проверки</div>
+        <h2>Блокирует до выставления</h2>
+        <p class="desc">Интерес не уходит дальше, пока все проверки не пройдены.</p>
+        <div class="grid3">
+          <div class="card stop">
+            <h3>Санкции</h3>
+            <p>Клиент в санкционном списке → интерес создать нельзя. Проверка и на покупке, и на продаже.</p>
+          </div>
+          <div class="card lot">
+            <h3>Мин. торговый лот</h3>
+            <p>Продавец выставляет объём <strong>не меньше</strong> минимального доступного торгового лота по фонду.</p>
+          </div>
+          <div class="card lot">
+            <h3>Остаток на счёте</h3>
+            <p>Либо продаёт <strong>весь объём</strong>, либо оставляет на счёте ≥ мин. лота — чтобы остаток потом можно было реализовать.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num">4</div>
+</section>
+
+<!-- 5 Lot example -->
+<section class="slide">
+  <div class="step-meta">Шаг 2 · Правило остатка</div>
+  <div class="body" style="justify-content:flex-start">
+    <div class="hero">
+      <div class="num">2</div>
+      <div class="text">
+        <div class="who">Продавец · пример</div>
+        <h2>Весь объём или остаток ≥ мин. лота</h2>
+        <p class="desc">Мин. торговый лот = 10 000. У клиента на счёте 25 000.</p>
+        <div class="ex">
+          <div class="ex-box bad">
+            <strong>Нельзя</strong>
+            Продать 20 000 → останется 5 000. Меньше мин. лота — остаток потом не реализовать.
+          </div>
+          <div class="ex-box good">
+            <strong>Можно</strong>
+            Продать все 25 000<br>
+            или 15 000 (остаток 10 000 = мин. лот)<br>
+            или 10 000 (остаток 15 000 ≥ мин. лота)
+          </div>
+        </div>
+        <div class="tip"><strong>Зачем:</strong> не оставлять клиенту «непродаваемый хвост» меньше минимального лота.</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num">5</div>
+</section>
+
+<!-- 6 Step 3 price -->
+<section class="slide">
+  <div class="step-meta">Шаг 3 из 7</div>
+  <div class="body" style="justify-content:flex-start">
+    <div class="hero">
+      <div class="num">3</div>
+      <div class="text">
+        <div class="who">Система</div>
+        <h2>Проверяет цену ±20%</h2>
+        <p class="desc">Цена сравнивается с NAV или индикативом CIB / Alt.Invest — в зависимости от фонда.</p>
+        <div class="items">
+          <div class="item ok"><span class="i">✓</span>Внутри ±20% → интерес идёт клиенту</div>
+          <div class="item"><span class="i">!</span>Вне ±20% → сначала согласование руководителя PCD</div>
+          <div class="item stop"><span class="i">$</span>Покупка вне ±20% → у клиента может возникнуть материальная выгода</div>
+        </div>
+        <div class="tip"><strong>Важно для Compliance:</strong> цена покупки за пределами коридора от NAV / индикатива — риск материальной выгоды у покупателя.</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num">6</div>
+</section>
+
+<!-- 7 Step 4 client -->
+<section class="slide">
+  <div class="step-meta">Шаг 4 из 7</div>
+  <div class="body" style="justify-content:flex-start">
+    <div class="hero">
+      <div class="num">4</div>
+      <div class="text">
+        <div class="who">Клиент в ATON Line</div>
+        <h2>Подтверждает интерес</h2>
+        <p class="desc">Получает push, знакомится с меморандумами и подписывает SMS-паролем.</p>
+        <div class="items">
+          <div class="item"><span class="i">1</span>Push с параметрами интереса</div>
+          <div class="item"><span class="i">2</span>Ознакомление с документами фонда</div>
+          <div class="item"><span class="i">3</span>SMS-подпись → интерес на витрине</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num">7</div>
+</section>
+
+<!-- 8 Step 5 showcase -->
+<section class="slide">
+  <div class="step-meta">Шаг 5 из 7</div>
+  <div class="body" style="justify-content:flex-start">
+    <div class="hero">
+      <div class="num">5</div>
+      <div class="text">
+        <div class="who">Все менеджеры АТОН</div>
+        <h2>Витрина и matching</h2>
+        <p class="desc">Интересы видны всем. Менеджеры сводят стороны и двигают цену, пока заявки не сойдутся.</p>
+        <div class="items">
+          <div class="item"><span class="i">1</span>На витрине: актив, цена, объём, сторона, срок</div>
+          <div class="item"><span class="i">2</span>Менеджеры обсуждают и двигают цену</div>
+          <div class="item"><span class="i">3</span>Цена (и объём) сошлись → алерт двум менеджерам</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num">8</div>
+</section>
+
+<!-- 9 Step 6 orders -->
+<section class="slide">
+  <div class="step-meta">Шаг 6 из 7</div>
+  <div class="body" style="justify-content:flex-start">
+    <div class="hero">
+      <div class="num">6</div>
+      <div class="text">
+        <div class="who">Два менеджера</div>
+        <h2>Выставляют реальные приказы</h2>
+        <p class="desc">В разделе «Приказы клиент–клиент». Условия подтягиваются из интересов.</p>
+        <div class="items">
+          <div class="item stop"><span class="i">✕</span>Повторная проверка санкций — санкционный клиент приказ выставить не может</div>
+          <div class="item"><span class="i">1</span>Предзаполнение: актив, цена, объём, клиент</div>
+          <div class="item"><span class="i">2</span>Если нужен KYC — сноска в UI и алерт менеджеру</div>
+          <div class="item"><span class="i">3</span>Здесь впервые блокируются активы</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num">9</div>
+</section>
+
+<!-- 10 Step 7 sign -->
+<section class="slide">
+  <div class="step-meta">Шаг 7 из 7</div>
+  <div class="body" style="justify-content:flex-start">
+    <div class="hero">
+      <div class="num">7</div>
+      <div class="text">
+        <div class="who">Клиент в ATON Line</div>
+        <h2>Подписывает поручение</h2>
+        <p class="desc">В чате с трейдером проходит финальное подтверждение сделки.</p>
+        <div class="items">
+          <div class="item"><span class="i">1</span>Меморандумы — галочка «Ознакомлен»</div>
+          <div class="item"><span class="i">2</span>Анкета проф. инвестора (где и сколько средств в $)</div>
+          <div class="item"><span class="i">3</span>Подтверждение торгового поручения</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num">10</div>
+</section>
+
+<!-- 11 Close -->
+<section class="slide purple">
+  <div class="body">
+    <p class="kicker">Итог</p>
+    <h1 style="font-size:36px;margin-bottom:24px">Интерес без блокировок.<br>Приказ — с полным контролем.</h1>
+    <div class="flow-row">
+      <div class="flow-box" style="background:rgba(255,255,255,.14)"><div class="n" style="background:#fff;color:#7000FF">1–2</div><p style="color:#fff">Ввод +<br>санкции / лот</p></div>
+      <div class="flow-arrow" style="color:#ccc">→</div>
+      <div class="flow-box" style="background:rgba(255,255,255,.14)"><div class="n" style="background:#fff;color:#7000FF">3–4</div><p style="color:#fff">Цена +<br>подтверждение</p></div>
+      <div class="flow-arrow" style="color:#ccc">→</div>
+      <div class="flow-box" style="background:rgba(255,255,255,.14)"><div class="n" style="background:#fff;color:#7000FF">5</div><p style="color:#fff">Витрина</p></div>
+      <div class="flow-arrow" style="color:#ccc">→</div>
+      <div class="flow-box" style="background:rgba(255,255,255,.14)"><div class="n" style="background:#fff;color:#7000FF">6–7</div><p style="color:#fff">Приказ +<br>подпись</p></div>
+    </div>
+  </div>
+  <div class="note">АТОН · Витрина интересов клиент–клиент</div>
+  <div class="slide-num">11</div>
+</section>
+
+</div>
+
+<div class="nav">
+  <button id="prev">← Назад</button>
+  <span class="counter" id="counter">1 / 11</span>
+  <button id="next">Вперёд →</button>
+</div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+let cur=0;
+function show(n){
+  slides[cur].classList.remove('active');
+  cur=Math.max(0,Math.min(slides.length-1,n));
+  slides[cur].classList.add('active');
+  document.getElementById('counter').textContent=(cur+1)+' / '+slides.length;
+  document.getElementById('prev').disabled=cur===0;
+  document.getElementById('next').disabled=cur===slides.length-1;
+  document.getElementById('progress').style.width=((cur+1)/slides.length*100)+'%';
+}
+document.getElementById('prev').onclick=()=>show(cur-1);
+document.getElementById('next').onclick=()=>show(cur+1);
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();show(cur-1);}
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '){e.preventDefault();show(cur+1);}
+});
+show(0);
+</script>
+</body>
+</html>

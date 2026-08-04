@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="UTF-8">
+<title>Стакан клиент-клиент — превью</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#1a1a1a;font-family:'Graphik',Arial,sans-serif;display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:24px}
+.viewport{width:1280px;height:720px;background:#fff;position:relative;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.4)}
+.slide{width:100%;height:100%;padding:36px 48px 32px;color:#000;display:flex;flex-direction:column}
+h2{font-size:24px;font-weight:700;margin-bottom:20px;flex:0 0 auto}
+.body{flex:1 1 auto;display:flex;gap:20px;min-height:0}
+.col{flex:1;display:flex;flex-direction:column;min-width:0}
+.col-title{font-size:15px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #1a1a1a}
+.col.sale .col-title{border-color:#7000FF;color:#7000FF}
+.flow{flex:1;display:flex;flex-direction:column;gap:0;justify-content:flex-start}
+.step{display:flex;align-items:stretch;gap:10px}
+.step-num{flex:0 0 22px;width:22px;height:22px;border-radius:50%;background:#1a1a1a;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:10px}
+.col.sale .step-num{background:#7000FF}
+.step-body{flex:1;min-width:0}
+.box{background:#f5f5f5;border-radius:8px;padding:10px 12px;font-size:12px;line-height:1.35;color:#1a1a1a}
+.box strong{font-weight:700}
+.box.accent{background:#7000FF;color:#fff}
+.box.accent strong{color:#fff}
+.box.wait{border:1.5px dashed #7000FF;background:#faf8ff}
+.box.check{border:1.5px solid #7000FF;background:#fff}
+.arrow{display:flex;align-items:center;padding:3px 0 3px 6px;color:#bbb;font-size:16px;line-height:1}
+.arrow::before{content:'';width:2px;height:10px;background:#ddd;margin-left:9px}
+.role{font-size:10px;color:#7000FF;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px}
+.box .role{color:#7000FF}
+.box.accent .role{color:rgba(255,255,255,.75)}
+.note{font-size:10px;color:#999;margin-top:auto;padding-top:12px;flex:0 0 auto}
+.slide-num{position:absolute;bottom:14px;right:24px;font-size:11px;color:#bbb}
+.legend{display:flex;gap:16px;margin-bottom:14px;flex:0 0 auto}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:#666}
+.legend-dot{width:10px;height:10px;border-radius:2px}
+.legend-dot.purple{background:#7000FF}
+.legend-dot.gray{background:#f5f5f5;border:1px solid #ddd}
+.legend-dot.dash{border:1.5px dashed #7000FF;background:#faf8ff}
+</style></head><body>
+<div class="viewport">
+  <section class="slide">
+    <h2>Запуск стакана «клиент-клиент»</h2>
+    <div class="legend">
+      <div class="legend-item"><span class="legend-dot purple"></span> Ключевой шаг / система</div>
+      <div class="legend-item"><span class="legend-dot dash"></span> Ожидание / проверка</div>
+      <div class="legend-item"><span class="legend-dot gray"></span> Действие менеджера</div>
+    </div>
+    <div class="body">
+      <div class="col sale">
+        <div class="col-title">Продажа</div>
+        <div class="flow">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <div class="box">
+                <div class="role">Менеджер → ПСМ</div>
+                Согласовывает с руководителем продажу актива <strong>(сумму продажи и дисконт)</strong> по клиенту
+              </div>
+            </div>
+          </div>
+          <div class="arrow">↓</div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <div class="box wait">
+                <div class="role">Ожидание</div>
+                Заявка <strong>не уходит клиенту</strong> до подтверждения руководителя PCD
+              </div>
+            </div>
+          </div>
+          <div class="arrow">↓</div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <div class="box">
+                <div class="role">Руководитель PCD</div>
+                Подтверждает заявку
+              </div>
+            </div>
+          </div>
+          <div class="arrow">↓</div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-body">
+              <div class="box accent">
+                <div class="role">АТОН Лайн → Клиент</div>
+                Заявка <strong>автоматически</strong> уходит клиенту в АТОН Лайн после согласования — <strong>поручение на продажу</strong>
+              </div>
+            </div>
+          </div>
+          <div class="arrow">↓</div>
+          <div class="step">
+            <div class="step-num">5</div>
+            <div class="step-body">
+              <div class="box accent">
+                <div class="role">Внутренний стакан</div>
+                Заявка падает в стакан <strong>«клиент-клиент»</strong> до исполнения
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="col-title">Покупка</div>
+        <div class="flow">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+              <div class="box">
+                <div class="role">Менеджер</div>
+                Формирует <strong>push-уведомление</strong> клиенту для ознакомления с меморандумами по активу с параметрами: <strong>объём и дисконт</strong>
+              </div>
+            </div>
+          </div>
+          <div class="arrow">↓</div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+              <div class="box wait">
+                <div class="role">Руководитель PCD</div>
+                Согласование параметров сделки, заданных менеджером
+              </div>
+            </div>
+          </div>
+          <div class="arrow">↓</div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+              <div class="box accent">
+                <div class="role">АТОН Лайн → Клиент</div>
+                Клиенту отправляется <strong>push-уведомление</strong>
+              </div>
+            </div>
+          </div>
+          <div class="arrow">↓</div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-body">
+              <div class="box">
+                <div class="role">Клиент</div>
+                Читает документы и ставит галочку <strong>«Ознакомлен»</strong>
+              </div>
+            </div>
+          </div>
+          <div class="arrow">↓</div>
+          <div class="step">
+            <div class="step-num">5</div>
+            <div class="step-body">
+              <div class="box">
+                <div class="role">Менеджер ↔ Клиент</div>
+                Менеджер может предметно обсуждать актив с клиентом
+              </div>
+            </div>
+          </div>
+          <div class="arrow">↓</div>
+          <div class="step">
+            <div class="step-num">6</div>
+            <div class="step-body">
+              <div class="box accent">
+                <div class="role">АТОН Лайн → Клиент</div>
+                При решении купить — менеджер отправляет <strong>торговое поручение</strong>
+              </div>
+            </div>
+          </div>
+          <div class="arrow">↓</div>
+          <div class="step">
+            <div class="step-num">7</div>
+            <div class="step-body">
+              <div class="box check">
+                <div class="role">Pre-check</div>
+                Проверка: параметры поручения = параметрам, согласованным с руководителем PCD
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="note">Внутренний документ · схема процесса запуска стакана «клиент-клиент»</div>
+    <div class="slide-num">1 / 1</div>
+  </section>
+</div>
+</body></html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="UTF-8">
+<title>Депозиты ЮЛ — превью</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#1a1a1a;font-family:'Graphik',Arial,sans-serif;display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:24px}
+.viewport{width:1280px;height:720px;background:#fff;position:relative;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.4)}
+.slide{display:none;width:100%;height:100%;padding:44px 64px 40px;color:#000;flex-direction:column}
+.slide.active{display:flex}
+.slide.dark{background:#111;color:#fff}
+.slide.dark h1{color:#fff}
+h1{font-size:52px;font-weight:700;line-height:1.12}
+h2{font-size:28px;font-weight:700;flex:0 0 auto;margin-bottom:20px}
+.kicker{font-size:18px;color:#7000FF;font-weight:700;margin-bottom:16px;letter-spacing:.04em}
+.subtitle{font-size:20px;color:#bbb;margin-top:20px;font-weight:400}
+.body{flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;min-height:0}
+.note{flex:0 0 auto;font-size:12px;color:#999;margin-top:18px}
+.grid{display:grid;gap:20px;flex:0 0 auto}
+.grid3{grid-template-columns:repeat(3,1fr)}
+.card{background:#f5f5f5;border-radius:10px;padding:32px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:220px;text-align:center}
+.card p{font-size:14px;color:#555;margin-top:8px}
+.accent-card{background:#7000FF;color:#fff}
+.accent-card p{color:#e6d9ff}
+.fact-num{font-size:56px;font-weight:700;line-height:1.05}
+.fact-label{font-size:18px;color:#555;margin-bottom:4px}
+.accent-card .fact-label{color:#e6d9ff}
+.wht{color:#fff}
+.cover{justify-content:space-between;padding:44px 64px}
+.cover-mid{margin-top:auto;margin-bottom:auto}
+.cover-bottom{display:flex;justify-content:flex-end;align-items:center}
+.date{font-size:14px;color:#bbb}
+.chart-card{background:#f5f5f5;border-radius:10px;padding:28px 20px 16px;flex:0 0 auto}
+.bars{display:flex;align-items:flex-end;justify-content:space-between;gap:4px;height:260px;padding-top:10px}
+.bar-col{display:flex;flex-direction:column;align-items:center;flex:1;min-width:0}
+.bar{width:100%;max-width:48px;background:#1a1a1a;border-radius:4px 4px 0 0;min-height:4px}
+.bar.accent{background:#7000FF}
+.bar.current{background:#7000FF;opacity:.75}
+.bar-val{font-size:9px;color:#555;margin-top:4px;white-space:nowrap}
+.bar-lbl{font-size:9px;color:#999;margin-top:2px;transform:rotate(-45deg);transform-origin:top center;height:36px;white-space:nowrap}
+.nav{margin-top:16px;display:flex;gap:12px;align-items:center;color:#fff}
+.nav button{background:#7000FF;color:#fff;border:none;padding:10px 20px;font-size:14px;cursor:pointer;border-radius:4px}
+.nav button:disabled{opacity:.4;cursor:default}
+.counter{font-size:14px;min-width:80px;text-align:center}
+</style></head><body>
+<div class="viewport">
+<section class="slide cover dark">
+  <div class="cover-mid">
+    <p class="kicker">Аналитика</p>
+    <h1>Остатки депозитов<br>юридических лиц</h1>
+    <p class="subtitle">Российская Федерация, рублёвые вклады и депозиты</p>
+  </div>
+  <div class="cover-bottom">
+    <span class="date">8 июля 2026</span>
+  </div>
+</section>
+<section class="slide">
+  <h2>Текущая ситуация</h2>
+  <div class="body">
+    <div class="grid grid3">
+      <div class="card accent-card center">
+        <div class="fact-num wht">34,9</div>
+        <div class="fact-label wht">трлн руб.</div>
+        <p class="wht">Остаток на 01.06.2026</p>
+      </div>
+      <div class="card center">
+        <div class="fact-num">37,9</div>
+        <div class="fact-label">трлн руб.</div>
+        <p>Пик — 12.2025</p>
+      </div>
+      <div class="card center">
+        <div class="fact-num">-8,1%</div>
+        <div class="fact-label">&nbsp;</div>
+        <p>Изменение с пика</p>
+      </div>
+    </div>
+    <div class="note">Источник: данные ЦБ РФ, по состоянию на 01.06.2026</div>
+  </div>
+</section>
+<section class="slide">
+  <h2>Динамика остатков, млн руб.</h2>
+  <div class="body">
+    <div class="chart-card">
+      <div class="bars"><div class="bar-col"><div class="bar" style="height:187px"></div><span class="bar-val">35637</span><span class="bar-lbl">01.2025</span></div><div class="bar-col"><div class="bar" style="height:182px"></div><span class="bar-val">34595</span><span class="bar-lbl">02.2025</span></div><div class="bar-col"><div class="bar" style="height:181px"></div><span class="bar-val">34417</span><span class="bar-lbl">03.2025</span></div><div class="bar-col"><div class="bar" style="height:181px"></div><span class="bar-val">34425</span><span class="bar-lbl">04.2025</span></div><div class="bar-col"><div class="bar" style="height:182px"></div><span class="bar-val">34545</span><span class="bar-lbl">05.2025</span></div><div class="bar-col"><div class="bar" style="height:181px"></div><span class="bar-val">34381</span><span class="bar-lbl">06.2025</span></div><div class="bar-col"><div class="bar" style="height:176px"></div><span class="bar-val">33548</span><span class="bar-lbl">07.2025</span></div><div class="bar-col"><div class="bar" style="height:177px"></div><span class="bar-val">33651</span><span class="bar-lbl">08.2025</span></div><div class="bar-col"><div class="bar" style="height:186px"></div><span class="bar-val">35411</span><span class="bar-lbl">09.2025</span></div><div class="bar-col"><div class="bar" style="height:185px"></div><span class="bar-val">35228</span><span class="bar-lbl">10.2025</span></div><div class="bar-col"><div class="bar" style="height:191px"></div><span class="bar-val">36263</span><span class="bar-lbl">11.2025</span></div><div class="bar-col"><div class="bar accent" style="height:200px"></div><span class="bar-val">37942</span><span class="bar-lbl">12.2025</span></div><div class="bar-col"><div class="bar" style="height:189px"></div><span class="bar-val">36012</span><span class="bar-lbl">01.2026</span></div><div class="bar-col"><div class="bar" style="height:186px"></div><span class="bar-val">35377</span><span class="bar-lbl">02.2026</span></div><div class="bar-col"><div class="bar" style="height:182px"></div><span class="bar-val">34656</span><span class="bar-lbl">03.2026</span></div><div class="bar-col"><div class="bar" style="height:180px"></div><span class="bar-val">34225</span><span class="bar-lbl">04.2026</span></div><div class="bar-col"><div class="bar" style="height:182px"></div><span class="bar-val">34613</span><span class="bar-lbl">05.2026</span></div><div class="bar-col"><div class="bar current" style="height:183px"></div><span class="bar-val">34884</span><span class="bar-lbl">06.2026</span></div></div>
+    </div>
+    <div class="note">Источник: данные ЦБ РФ, по состоянию на 01.06.2026</div>
+  </div>
+</section></div>
+<div class="nav">
+  <button id="prev">← Назад</button>
+  <span class="counter" id="counter">1 / 3</span>
+  <button id="next">Вперёд →</button>
+</div>
+<script>
+const slides=document.querySelectorAll('.slide');let cur=0;
+function show(n){slides[cur].classList.remove('active');cur=Math.max(0,Math.min(slides.length-1,n));slides[cur].classList.add('active');
+document.getElementById('counter').textContent=(cur+1)+' / '+slides.length;
+document.getElementById('prev').disabled=cur===0;document.getElementById('next').disabled=cur===slides.length-1;}
+document.getElementById('prev').onclick=()=>show(cur-1);
+document.getElementById('next').onclick=()=>show(cur+1);
+document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')show(cur-1);if(e.key==='ArrowRight')show(cur+1);});
+show(0);
+</script></body></html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="UTF-8">
+<title>РЕПО с ЦК — пошаговая инструкция</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#1a1a1a;font-family:'Graphik',Arial,sans-serif;display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:24px}
+.viewport{width:1280px;height:720px;background:#fff;position:relative;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.4)}
+.slide{display:none;width:100%;height:100%;padding:44px 64px 40px;color:#000;flex-direction:column}
+.slide.active{display:flex}
+.slide.purple{background:#7000FF;color:#fff}
+.slide.purple h1{color:#fff}
+h1{font-size:46px;font-weight:700;line-height:1.12}
+h2{font-size:30px;font-weight:700;line-height:1.2;margin-bottom:14px}
+.kicker{font-size:16px;color:#7000FF;font-weight:700;margin-bottom:16px;letter-spacing:.04em}
+.subtitle{font-size:20px;color:#e6d9ff;margin-top:20px;font-weight:400;line-height:1.45}
+.body{flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;min-height:0}
+.note{flex:0 0 auto;font-size:12px;color:#999;margin-top:16px}
+.wht{color:#fff}
+.step-meta{flex:0 0 auto;font-size:14px;font-weight:700;color:#7000FF;letter-spacing:.06em;margin-bottom:18px}
+.step-hero{display:flex;gap:28px;align-items:flex-start;flex:0 0 auto}
+.step-big{flex:0 0 auto;width:88px;height:88px;border-radius:50%;background:#7000FF;color:#fff;font-size:42px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.step-content{flex:1 1 auto}
+.step-text{font-size:18px;line-height:1.55;color:#333;margin-bottom:14px}
+.bullets{display:flex;flex-direction:column;gap:10px;margin-top:4px}
+.bullet{display:flex;gap:12px;align-items:flex-start;font-size:16px;line-height:1.5;color:#333}
+.dot{width:9px;height:9px;border-radius:50%;background:#7000FF;margin-top:8px;flex:0 0 auto}
+.tip{flex:0 0 auto;margin-top:22px;background:#f5f5f5;border-left:5px solid #7000FF;padding:16px 20px;font-size:15px;line-height:1.45;border-radius:0 10px 10px 0;color:#333}
+.cover{justify-content:space-between;padding:44px 64px}
+.cover-mid{margin-top:auto;margin-bottom:auto}
+.cover-bottom{display:flex;justify-content:flex-end;align-items:center}
+.date{font-size:14px;color:#e6d9ff}
+.nav{margin-top:16px;display:flex;gap:12px;align-items:center;color:#fff}
+.nav button{background:#7000FF;color:#fff;border:none;padding:10px 20px;font-size:14px;cursor:pointer;border-radius:4px}
+.nav button:disabled{opacity:.4;cursor:default}
+.counter{font-size:14px;min-width:80px;text-align:center}
+</style></head><body>
+<div class="viewport">
+<section class="slide cover purple">
+  <div class="cover-mid">
+    <p class="kicker wht">QUIK · Размещение ликвидности</p>
+    <h1>Пошаговая инструкция<br>по размещению в РЕПО с ЦК</h1>
+    <p class="subtitle wht">7 шагов в торговом терминале TC QUIK</p>
+  </div>
+  <div class="cover-bottom">
+    <span class="date wht">9 июля 2026</span>
+  </div>
+</section>
+<section class="slide">
+  <div class="step-meta">Шаг 1 из 7</div>
+  <div class="body">
+    <div class="step-hero">
+      <div class="step-big">1</div>
+      <div class="step-content">
+        <h2>Выберите режим торгов</h2>
+        <p class="step-text">Размещение свободных денежных средств доступно в TC QUIK. Выберите один из трёх режимов:</p>
+        <div class="bullets"><div class="bullet"><span class="dot"></span><span>EQRP — РЕПО с ЦК 1 день (Акции)</span></div><div class="bullet"><span class="dot"></span><span>EQRP_BND — РЕПО с ЦК 1 день (Облигации)</span></div><div class="bullet"><span class="dot"></span><span>GCRP — РЕПО с ЦК 1 день (КСУ)</span></div></div>
+      </div>
+    </div>
+    <div class="tip"><strong>Важно:</strong> Минимальная заявка — от 100 000 руб. Время выставления — до 17:00</div>
+    <div class="note">Источник: внутренняя инструкция АТОН, по состоянию на 09.07.2026</div>
+  </div>
+</section>
+<section class="slide">
+  <div class="step-meta">Шаг 2 из 7</div>
+  <div class="body">
+    <div class="step-hero">
+      <div class="step-big">2</div>
+      <div class="step-content">
+        <h2>Найдите режим в QUIK</h2>
+        <p class="step-text">В рабочем месте QUIK в поле «Поиск инструмента» введите название нужного режима торгов и нажмите Enter.</p>
+        
+      </div>
+    </div>
+    <div class="tip"><strong>Важно:</strong> Например: EQRP, EQRP_BND или GCRP</div>
+    <div class="note">Источник: внутренняя инструкция АТОН, по состоянию на 09.07.2026</div>
+  </div>
+</section>
+<section class="slide">
+  <div class="step-meta">Шаг 3 из 7</div>
+  <div class="body">
+    <div class="step-hero">
+      <div class="step-big">3</div>
+      <div class="step-content">
+        <h2>Откройте стакан</h2>
+        <p class="step-text">Выберите нужный инструмент, через который хотите совершить размещение. Откройте стакан одним из способов:</p>
+        <div class="bullets"><div class="bullet"><span class="dot"></span><span>Двойное нажатие левой кнопкой мыши по инструменту</span></div><div class="bullet"><span class="dot"></span><span>Правая кнопка мыши → «Стакан»</span></div></div>
+      </div>
+    </div>
+    
+    <div class="note">Источник: внутренняя инструкция АТОН, по состоянию на 09.07.2026</div>
+  </div>
+</section>
+<section class="slide">
+  <div class="step-meta">Шаг 4 из 7</div>
+  <div class="body">
+    <div class="step-hero">
+      <div class="step-big">4</div>
+      <div class="step-content">
+        <h2>Изучите ставки в стакане</h2>
+        <p class="step-text">В открывшемся стакане отображаются заявки на покупку и продажу. Цена означает годовую % ставку, по которой будет происходить размещение.</p>
+        
+      </div>
+    </div>
+    
+    <div class="note">Источник: внутренняя инструкция АТОН, по состоянию на 09.07.2026</div>
+  </div>
+</section>
+<section class="slide">
+  <div class="step-meta">Шаг 5 из 7</div>
+  <div class="body">
+    <div class="step-hero">
+      <div class="step-big">5</div>
+      <div class="step-content">
+        <h2>Создайте заявку</h2>
+        <p class="step-text">Двойным нажатием по стакану или через ПКМ → «Новая заявка» откройте окно для заполнения заявки. Укажите:</p>
+        <div class="bullets"><div class="bullet"><span class="dot"></span><span>Сторону сделки — «Покупка»</span></div><div class="bullet"><span class="dot"></span><span>Тип заявки — рыночная или лимитная</span></div><div class="bullet"><span class="dot"></span><span>Код клиента (номер счёта)</span></div><div class="bullet"><span class="dot"></span><span>Нажмите «ДА» и ещё раз подтвердите выставление заявки</span></div></div>
+      </div>
+    </div>
+    
+    <div class="note">Источник: внутренняя инструкция АТОН, по состоянию на 09.07.2026</div>
+  </div>
+</section>
+<section class="slide">
+  <div class="step-meta">Шаг 6 из 7</div>
+  <div class="body">
+    <div class="step-hero">
+      <div class="step-big">6</div>
+      <div class="step-content">
+        <h2>Выберите тип заявки</h2>
+        <p class="step-text">Тип заявки определяет, как будет исполнена сделка:</p>
+        <div class="bullets"><div class="bullet"><span class="dot"></span><span>Рыночная — исполняется сразу по ближайшей рыночной цене в стакане</span></div><div class="bullet"><span class="dot"></span><span>Лимитная — вы указываете желаемую цену; при наличии встречного ордера заявка исполняется</span></div></div>
+      </div>
+    </div>
+    
+    <div class="note">Источник: внутренняя инструкция АТОН, по состоянию на 09.07.2026</div>
+  </div>
+</section>
+<section class="slide">
+  <div class="step-meta">Шаг 7 из 7</div>
+  <div class="body">
+    <div class="step-hero">
+      <div class="step-big">7</div>
+      <div class="step-content">
+        <h2>Сравните инструменты в таблице</h2>
+        <p class="step-text">Для быстрого поиска выгодной бумаги создайте таблицу текущих торгов: Создать окно → Текущие торги.</p>
+        <div class="bullets"><div class="bullet"><span class="dot"></span><span>Выберите все доступные инструменты в нужном режиме торгов</span></div><div class="bullet"><span class="dot"></span><span>В доступные параметры добавьте ценовые параметры</span></div><div class="bullet"><span class="dot"></span><span>В одной таблице удобно видеть информацию по всем инструментам</span></div></div>
+      </div>
+    </div>
+    
+    <div class="note">Источник: внутренняя инструкция АТОН, по состоянию на 09.07.2026</div>
+  </div>
+</section></div>
+<div class="nav">
+  <button id="prev">← Назад</button>
+  <span class="counter" id="counter">1 / 8</span>
+  <button id="next">Вперёд →</button>
+</div>
+<script>
+const slides=document.querySelectorAll('.slide');let cur=0;
+function show(n){slides[cur].classList.remove('active');cur=Math.max(0,Math.min(slides.length-1,n));slides[cur].classList.add('active');
+document.getElementById('counter').textContent=(cur+1)+' / '+slides.length;
+document.getElementById('prev').disabled=cur===0;document.getElementById('next').disabled=cur===slides.length-1;}
+document.getElementById('prev').onclick=()=>show(cur-1);
+document.getElementById('next').onclick=()=>show(cur+1);
+document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')show(cur-1);if(e.key==='ArrowRight')show(cur+1);});
+show(0);
+</script></body></html>

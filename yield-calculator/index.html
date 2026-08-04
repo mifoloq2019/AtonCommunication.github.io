@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ru"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Калькулятор модельной доходности — AMNR / AMFL</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --purple:#7000FF;--purple-light:#f3ebff;--black:#111;--gray:#666;--gray-light:#f5f5f5;
+  --border:#e0e0e0;--green:#0a7a3e;--radius:10px;
+}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#1a1a1a;color:var(--black);min-height:100vh;padding:24px}
+.wrap{max-width:1280px;margin:0 auto}
+header{background:var(--black);color:#fff;border-radius:var(--radius);padding:28px 36px;margin-bottom:20px}
+header h1{font-size:28px;font-weight:700;margin-bottom:6px}
+header p{font-size:14px;color:#bbb}
+.grid{display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start}
+@media(max-width:960px){.grid{grid-template-columns:1fr}}
+.panel{background:#fff;border-radius:var(--radius);padding:24px;box-shadow:0 4px 24px rgba(0,0,0,.25)}
+.panel h2{font-size:16px;font-weight:700;margin-bottom:16px;text-transform:uppercase;letter-spacing:.04em;color:var(--gray)}
+.field{margin-bottom:18px}
+.field label{display:block;font-size:13px;color:var(--gray);margin-bottom:6px}
+.field input[type=number]{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:6px;font-size:16px}
+.field input[type=range]{width:100%;accent-color:var(--purple)}
+.range-row{display:flex;justify-content:space-between;align-items:center;margin-top:4px}
+.range-val{font-size:20px;font-weight:700;color:var(--purple)}
+.hint{font-size:11px;color:#999;margin-top:4px}
+.winner{background:linear-gradient(135deg,var(--purple),#9b4dff);color:#fff;border-radius:var(--radius);padding:20px 24px;margin-bottom:20px;min-height:72px;display:flex;align-items:center;gap:12px}
+.winner.empty{background:var(--gray-light);color:var(--gray)}
+.winner-icon{font-size:28px;line-height:1}
+.winner-text{font-size:15px;line-height:1.45}
+.winner-text strong{display:block;font-size:18px;margin-bottom:4px}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+@media(max-width:640px){.cards{grid-template-columns:1fr}}
+.card{border:2px solid var(--border);border-radius:var(--radius);padding:20px;transition:border-color .2s,box-shadow .2s}
+.card.leader{border-color:var(--purple);box-shadow:0 0 0 1px var(--purple)}
+.card-head{font-size:13px;color:var(--gray);margin-bottom:4px;white-space:pre-line}
+.card-name{font-size:20px;font-weight:700;margin-bottom:12px}
+.metric{margin-bottom:10px}
+.metric-label{font-size:12px;color:var(--gray)}
+.metric-value{font-size:26px;font-weight:700}
+.metric-value.income{color:var(--purple)}
+.metric-value.pct{font-size:20px}
+.card-note{font-size:11px;color:#999;line-height:1.4;margin-top:8px}
+.charts{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+@media(max-width:800px){.charts{grid-template-columns:1fr}}
+.chart-box{background:var(--gray-light);border-radius:var(--radius);padding:16px}
+.chart-box h3{font-size:13px;font-weight:700;margin-bottom:12px;color:var(--gray)}
+canvas{width:100%!important;height:220px!important}
+.table-wrap{overflow-x:auto;margin-bottom:20px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border)}
+th{font-weight:700;background:var(--gray-light)}
+td.num{text-align:right;font-variant-numeric:tabular-nums}
+.disclaimer{font-size:11px;color:var(--gray);line-height:1.5;margin-bottom:12px}
+details{margin-bottom:12px}
+details summary{cursor:pointer;font-size:13px;font-weight:700;padding:10px 0;color:var(--purple)}
+details .content{font-size:11px;color:var(--gray);line-height:1.55;max-height:240px;overflow-y:auto;padding-right:8px}
+footer{text-align:center;color:#888;font-size:11px;margin-top:16px}
+</style>
+</head><body>
+<div class="wrap">
+<header>
+  <h1>Калькулятор модельной доходности</h1>
+  <p>БПИФ AMNR и AMFL · без вкладов · модельный расчёт</p>
+</header>
+
+<div class="grid">
+  <aside class="panel">
+    <h2>Параметры</h2>
+    <div class="field">
+      <label for="rusfar">Ставка RUSFAR, % годовых</label>
+      <input type="number" id="rusfar" min="0" max="50" step="0.01" value="15">
+    </div>
+    <div class="field">
+      <label for="keyrate">Ключевая ставка, % годовых</label>
+      <input type="number" id="keyrate" min="0" max="50" step="0.01" value="14">
+    </div>
+    <div class="field">
+      <label for="amount">Сумма инвестирования, ₽</label>
+      <input type="number" id="amount" min="1000" step="1000" value="1000000">
+    </div>
+    <div class="field">
+      <label for="days">Количество дней размещения</label>
+      <input type="range" id="days" min="1" max="365" value="10">
+      <div class="range-row"><span class="hint">1 день</span><span class="range-val" id="daysLabel">10</span><span class="hint">365 дней</span></div>
+    </div>
+    <p class="hint">Расчёт обновляется автоматически при изменении параметров.</p>
+  </aside>
+
+  <main>
+    <div class="panel">
+      <div class="winner empty" id="winner">
+        <span class="winner-icon">🏆</span>
+        <div class="winner-text" id="winnerText">Введите параметры для расчёта</div>
+      </div>
+
+      <div class="cards">
+        <div class="card" id="cardAmnr">
+          <div class="card-head">AMNR*
+ISIN: RU000A107H96</div>
+          <div class="card-name">Накопительный в рублях</div>
+          <div class="metric"><div class="metric-label">Модельный доход</div><div class="metric-value income" id="incomeAmnr">—</div></div>
+          <div class="metric"><div class="metric-label">Модельная доходность</div><div class="metric-value pct" id="yieldAmnr">—</div></div>
+          <p class="card-note">Учитываются ставка RUSFAR, спреды на покупку и продажу, комиссии и расходы УК.</p>
+        </div>
+        <div class="card" id="cardAmfl">
+          <div class="card-head">AMFL**
+ISIN: RU000A108P04</div>
+          <div class="card-name">Флоатеры</div>
+          <div class="metric"><div class="metric-label">Модельный доход</div><div class="metric-value income" id="incomeAmfl">—</div></div>
+          <div class="metric"><div class="metric-label">Модельная доходность</div><div class="metric-value pct" id="yieldAmfl">—</div></div>
+          <p class="card-note">Учитываются ключевая ставка, премия к КС, спреды, комиссии и расходы УК.</p>
+        </div>
+      </div>
+
+      <div class="charts">
+        <div class="chart-box"><h3>Доходность по сроку размещения, % годовых</h3><canvas id="chartYield"></canvas></div>
+        <div class="chart-box"><h3>Модельный доход по сроку, ₽</h3><canvas id="chartIncome"></canvas></div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Инструмент</th><th class="num">Доходность, %</th><th class="num">Доход, ₽</th><th>Что учитывалось</th></tr></thead>
+          <tbody id="detailBody"></tbody>
+        </table>
+      </div>
+
+      <p class="disclaimer">* БПИФ рыночных финансовых инструментов «АТОН – Накопительный в рублях»<br>
+      ** БПИФ рыночных финансовых инструментов «АТОН – Флоатеры»</p>
+
+      <details>
+        <summary>Дисклеймер</summary>
+        <div class="content">НЕ ГАРАНТИРОВАНЫ:
+- будущая эффективность деятельности профессионального участника и управляющей компании;
+- будущая доходность финансовых инструментов от оказания услуг по управлению;
+- надёжность возможных инвестиций;
+- стабильность размеров возможных доходов или издержек, связанных с указанными инвестициями;
+- фактическая доходность от оказания услуг по управлению ценными бумагами может отличаться от указанной в расчётах будущей доходности.
+
+Приведённый расчёт носит ограниченный характер, не учитывает будущие рыночные условия и не является прогнозом будущей доходности.</div>
+      </details>
+
+      <details>
+        <summary>Риски</summary>
+        <div class="content">Рыночный риск · Кредитный риск · Валютный риск · Операционный риск · Санкционный риск · Обстоятельства непреодолимой силы · Кастодиальный риск · Риск расчётов · Регуляторные риски · Риск ликвидности. Инвестор может столкнуться с иными рисками, не указанными выше.</div>
+      </details>
+    </div>
+  </main>
+</div>
+<footer>Модельный расчёт · не является инвестиционной рекомендацией · 10 июля 2026</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+
+function calcAmnr(rusfarDec, days) {
+  const c2 = rusfarDec, c3 = 0.00295, c4 = 0.5 / 10000 / 2, c5 = 0;
+  let g = 1 - (c5 + c4), h = g - g * c5 - g * c4;
+  for (let d = 1; d <= days; d++) {
+    g = g * (1 + (c2 - c3) / 365);
+    h = g - g * c5 - g * c4;
+  }
+  return days === 0 ? 0 : (h - 1) * 365 / days;
+}
+
+function calcAmfl(keyRateDec, days) {
+  const c2 = keyRateDec * 100, c3 = 2.05, c4 = 0.65, c5 = 0.115, c6 = 0;
+  const c9 = c2 + c3 - c4;
+  const g2 = 1 - (c5 + c6) / 100;
+  function sellPrice(day) {
+    if (day === 0) return g2 * (1 - (c5 + c6) / 100);
+    const g = g2 * (1 + c9 / 100 / 365 * day);
+    return g * (1 - (c5 + c6) / 100);
+  }
+  return days === 0 ? 0 : (sellPrice(days - 1) - 1) * 365 / days;
+}
+
+function calcIncome(amount, yld, days) {
+  return amount * yld / 365 * days;
+}
+
+function fmtRub(v) {
+  return new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 }).format(Math.round(v)) + ' ₽';
+}
+
+function fmtPct(v) {
+  return (v * 100).toFixed(2).replace('.', ',') + '% годовых';
+}
+
+function validInputs() {
+  const rusfar = parseFloat($('rusfar').value);
+  const keyrate = parseFloat($('keyrate').value);
+  const amount = parseFloat($('amount').value);
+  const days = parseInt($('days').value, 10);
+  if ([rusfar, keyrate, amount, days].some(x => Number.isNaN(x))) return null;
+  if (amount <= 0 || days < 1) return null;
+  return { rusfar: rusfar / 100, keyrate: keyrate / 100, amount, days };
+}
+
+let chartYield, chartIncome;
+
+function initCharts() {
+  const common = {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } } },
+    scales: {
+      x: { title: { display: true, text: 'Дней', font: { size: 11 } }, ticks: { maxTicksLimit: 8, font: { size: 10 } } },
+      y: { ticks: { font: { size: 10 } } }
+    }
+  };
+  chartYield = new Chart($('chartYield'), {
+    type: 'line',
+    data: { labels: [], datasets: [
+      { label: 'AMNR', data: [], borderColor: '#7000FF', backgroundColor: 'rgba(112,0,255,.1)', tension: .25, pointRadius: 0 },
+      { label: 'AMFL', data: [], borderColor: '#111', backgroundColor: 'rgba(0,0,0,.05)', tension: .25, pointRadius: 0 }
+    ]},
+    options: { ...common, scales: { ...common.scales, y: { ...common.scales.y, title: { display: true, text: '% годовых', font: { size: 11 } }, ticks: { callback: v => (v * 100).toFixed(1) + '%', font: { size: 10 } } } } }
+  });
+  chartIncome = new Chart($('chartIncome'), {
+    type: 'line',
+    data: { labels: [], datasets: [
+      { label: 'AMNR', data: [], borderColor: '#7000FF', backgroundColor: 'rgba(112,0,255,.1)', tension: .25, pointRadius: 0 },
+      { label: 'AMFL', data: [], borderColor: '#111', backgroundColor: 'rgba(0,0,0,.05)', tension: .25, pointRadius: 0 }
+    ]},
+    options: { ...common, scales: { ...common.scales, y: { ...common.scales.y, title: { display: true, text: '₽', font: { size: 11 } }, ticks: { callback: v => fmtRub(v), font: { size: 10 } } } } }
+  });
+}
+
+function update() {
+  const p = validInputs();
+  $('daysLabel').textContent = $('days').value;
+
+  const winner = $('winner');
+  const winnerText = $('winnerText');
+  const cardAmnr = $('cardAmnr');
+  const cardAmfl = $('cardAmfl');
+
+  if (!p) {
+    winner.className = 'winner empty';
+    winnerText.textContent = 'Введите параметры для расчёта';
+    ['incomeAmnr','incomeAmfl','yieldAmnr','yieldAmfl'].forEach(id => $(id).textContent = '—');
+    cardAmnr.classList.remove('leader');
+    cardAmfl.classList.remove('leader');
+    return;
+  }
+
+  const yAmnr = calcAmnr(p.rusfar, p.days);
+  const yAmfl = calcAmfl(p.keyrate, p.days);
+  const iAmnr = calcIncome(p.amount, yAmnr, p.days);
+  const iAmfl = calcIncome(p.amount, yAmfl, p.days);
+
+  $('yieldAmnr').textContent = fmtPct(yAmnr);
+  $('yieldAmfl').textContent = fmtPct(yAmfl);
+  $('incomeAmnr').textContent = fmtRub(iAmnr);
+  $('incomeAmfl').textContent = fmtRub(iAmfl);
+
+  const amnrWins = iAmnr >= iAmfl;
+  cardAmnr.classList.toggle('leader', amnrWins);
+  cardAmfl.classList.toggle('leader', !amnrWins);
+
+  const winIncome = Math.max(iAmnr, iAmfl);
+  const winName = amnrWins ? 'AMNR (RU000A107H96)' : 'AMFL (RU000A108P04)';
+  winner.className = 'winner';
+  winnerText.innerHTML = '<strong>🏆 За указанный период модельная доходность выше у ' + winName + '</strong>Доход: ' + fmtRub(winIncome);
+
+  $('detailBody').innerHTML = `
+    <tr><td>AMNR<br><small>RU000A107H96</small></td><td class="num">${fmtPct(yAmnr)}</td><td class="num">${fmtRub(iAmnr)}</td><td>RUSFAR, спреды, комиссии УК</td></tr>
+    <tr><td>AMFL<br><small>RU000A108P04</small></td><td class="num">${fmtPct(yAmfl)}</td><td class="num">${fmtRub(iAmfl)}</td><td>КС, премия к КС, спреды, комиссии УК</td></tr>`;
+
+  const step = p.days > 120 ? 5 : (p.days > 60 ? 2 : 1);
+  const labels = [], yA = [], yF = [], iA = [], iF = [];
+  for (let d = 1; d <= 365; d += step) {
+    labels.push(d);
+    const ya = calcAmnr(p.rusfar, d);
+    const yf = calcAmfl(p.keyrate, d);
+    yA.push(ya);
+    yF.push(yf);
+    iA.push(calcIncome(p.amount, ya, d));
+    iF.push(calcIncome(p.amount, yf, d));
+  }
+  if (labels[labels.length - 1] !== 365) {
+    labels.push(365);
+    const ya = calcAmnr(p.rusfar, 365);
+    const yf = calcAmfl(p.keyrate, 365);
+    yA.push(ya); yF.push(yf);
+    iA.push(calcIncome(p.amount, ya, 365));
+    iF.push(calcIncome(p.amount, yf, 365));
+  }
+
+  chartYield.data.labels = labels;
+  chartYield.data.datasets[0].data = yA;
+  chartYield.data.datasets[1].data = yF;
+  chartYield.update('none');
+
+  chartIncome.data.labels = labels;
+  chartIncome.data.datasets[0].data = iA;
+  chartIncome.data.datasets[1].data = iF;
+  chartIncome.update('none');
+}
+
+['rusfar','keyrate','amount','days'].forEach(id => {
+  $(id).addEventListener('input', update);
+});
+
+initCharts();
+update();
+</script>
+</body></html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>FinEx — FAQ</title>
+  <style>
+    @page { size: A4; margin: 16mm 14mm; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'GraphikAton Office', Graphik, Arial, sans-serif;
+      color: #1a1a1a;
+      line-height: 1.5;
+      background: #fff;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .hero {
+      background: #7000FF;
+      color: #fff;
+      padding: 28px 32px;
+      border-radius: 10px;
+      margin-bottom: 22px;
+    }
+    .kicker {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: #e6d9ff;
+      margin-bottom: 10px;
+    }
+    .hero h1 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .hero p {
+      font-size: 14px;
+      color: #e6d9ff;
+      max-width: 520px;
+    }
+    .item {
+      border-bottom: 1px solid #e8e8e8;
+      padding: 16px 0 18px;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .item:last-child { border-bottom: none; }
+    .q-row {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+    .num {
+      flex: 0 0 auto;
+      font-size: 13px;
+      font-weight: 700;
+      color: #7000FF;
+      min-width: 24px;
+      padding-top: 2px;
+    }
+    .q-text {
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+    .a {
+      padding-left: 38px;
+      color: #555;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    .a p + p { margin-top: 8px; }
+    .a ol {
+      margin: 8px 0 0;
+      padding-left: 20px;
+    }
+    .a li { margin-bottom: 5px; }
+    .a a {
+      color: #7000FF;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .note {
+      margin-top: 10px;
+      background: #f5f5f5;
+      border-left: 4px solid #7000FF;
+      border-radius: 0 6px 6px 0;
+      padding: 10px 12px;
+      font-size: 12.5px;
+      color: #1a1a1a;
+    }
+    .footer {
+      margin-top: 24px;
+      font-size: 11px;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <p class="kicker">FinEx · Ликвидация фондов</p>
+    <h1>FAQ</h1>
+    <p>Ответы на частые вопросы о выплатах, переводе паёв и участии в ликвидации</p>
+  </header>
+
+  <div class="item">
+    <div class="q-row">
+      <span class="num">01</span>
+      <div class="q-text">Как получить выплату по активу в НРД-Euroclear на незаблокированный счет?</div>
+    </div>
+    <div class="a">
+      <p>Процесс будет состоять из нескольких этапов, но последний этап будет связан с зачислением средств для конкретного клиента на неподсанкционные счета и на внешний контур.</p>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="q-row">
+      <span class="num">02</span>
+      <div class="q-text">Какая сумма входа? Есть ли она?</div>
+    </div>
+    <div class="a">
+      <p>Суммы входа нет.</p>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="q-row">
+      <span class="num">03</span>
+      <div class="q-text">Будет ли комиссия, если да, то какая?</div>
+    </div>
+    <div class="a">
+      <p>Ликвидатор вычтет из стоимости чистых активов затраты на юридическое сопровождение и свою комиссию, также возможны дополнительные издержки, связанные с инфраструктурой для зачисления выплат.</p>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="q-row">
+      <span class="num">04</span>
+      <div class="q-text">Выплата будет в рублях?</div>
+    </div>
+    <div class="a">
+      <p>Выплата должна быть в валюте ликвидируемого фонда.</p>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="q-row">
+      <span class="num">05</span>
+      <div class="q-text">Какие выкупные стоимости паёв?</div>
+    </div>
+    <div class="a">
+      <p>Стоимость будет определена после продажи имущества фондов. Текущая стоимость пая приведена на <a href="https://finex-etf.ru/calc/nav">finex-etf.ru/calc/nav</a>.</p>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="q-row">
+      <span class="num">06</span>
+      <div class="q-text">Как FinEx реализует активы внутри фондов, где продаются активы и по каким ценам?</div>
+    </div>
+    <div class="a">
+      <p>Где будут реализованы активы — неважно, ликвидатор заинтересован продать их по лучшей цене. Важно, что деньги по результату будут распределены между пайщиками, и важно иметь возможность получить их на неподсанкционный счёт.</p>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="q-row">
+      <span class="num">07</span>
+      <div class="q-text">Если не переставлять паи в АТОН, возможно ли участие в ликвидации на счетах у другого брокера?</div>
+    </div>
+    <div class="a">
+      <p>Процесс только начинается и ожидаемо он будет выглядеть так:</p>
+      <ol>
+        <li>Продажа имущества фондов;</li>
+        <li>Определение круга лиц, кому нужно производить выплаты;</li>
+        <li>Получение разрешений санкционных регуляторов;</li>
+        <li>Распределение имущества.</li>
+      </ol>
+      <p>Третий этап обусловлен получением лицензий («obtaining necessary licences or authorisations») — это означает, что ликвидаторы заранее учитывают возможные санкционные ограничения при распределении средств.</p>
+      <div class="note">Важно, чтобы брокер имел всю инфраструктуру для последующего зачисления таких средств, в том числе во внешнем контуре. У нас есть подтверждённый опыт в распределении средств из иностранного депо (выплаты в Euroclear — 100+ млн долларов США).</div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="q-row">
+      <span class="num">08</span>
+      <div class="q-text">Когда запустим процедуру? Что нужно будет клиентам сделать для этого, если бумаги уже в Атоне?</div>
+    </div>
+    <div class="a">
+      <p>Коллеги уже начали переставлять активы: с 1 июня было зачислено фондов FinEx на сумму более чем 11 млн долларов США (по оценке FinEx).</p>
+    </div>
+  </div>
+
+</body>
+</html>

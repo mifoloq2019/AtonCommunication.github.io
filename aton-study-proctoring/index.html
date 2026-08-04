@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="UTF-8">
+<title>ATON Study — тестирование с прокторингом</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#1a1a1a;font-family:'Graphik',Arial,sans-serif;display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:24px}
+.viewport{width:1280px;height:720px;background:#fff;position:relative;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.4)}
+.slide{display:none;width:100%;height:100%;padding:44px 64px 40px;color:#000;flex-direction:column}
+.slide.active{display:flex}
+.slide.purple{background:#7000FF;color:#fff}
+.slide.purple h1{color:#fff}
+h1{font-size:46px;font-weight:700;line-height:1.12}
+h2{font-size:30px;font-weight:700;line-height:1.2;margin-bottom:14px}
+.kicker{font-size:16px;color:#7000FF;font-weight:700;margin-bottom:16px;letter-spacing:.04em}
+.subtitle{font-size:20px;color:#e6d9ff;margin-top:20px;font-weight:400;line-height:1.45}
+.body{flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;min-height:0}
+.note{flex:0 0 auto;font-size:12px;color:#999;margin-top:16px}
+.wht{color:#fff}
+.step-meta{flex:0 0 auto;font-size:14px;font-weight:700;color:#7000FF;letter-spacing:.06em;margin-bottom:18px}
+.step-hero{display:flex;gap:28px;align-items:flex-start;flex:0 0 auto}
+.step-big{flex:0 0 auto;width:88px;height:88px;border-radius:50%;background:#7000FF;color:#fff;font-size:42px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.step-content{flex:1 1 auto}
+.step-text{font-size:18px;line-height:1.55;color:#333;margin-bottom:14px}
+.bullets{display:flex;flex-direction:column;gap:10px;margin-top:4px}
+.bullet{display:flex;gap:12px;align-items:flex-start;font-size:16px;line-height:1.5;color:#333}
+.dot{width:9px;height:9px;border-radius:50%;background:#7000FF;margin-top:8px;flex:0 0 auto}
+.tip{flex:0 0 auto;margin-top:22px;background:#f5f5f5;border-left:5px solid #7000FF;padding:16px 20px;font-size:15px;line-height:1.45;border-radius:0 10px 10px 0;color:#333}
+.cover{justify-content:space-between;padding:44px 64px}
+.cover-mid{margin-top:auto;margin-bottom:auto}
+.cover-bottom{display:flex;justify-content:flex-end;align-items:center}
+.date{font-size:14px;color:#e6d9ff}
+.nav{margin-top:16px;display:flex;gap:12px;align-items:center;color:#fff}
+.nav button{background:#7000FF;color:#fff;border:none;padding:10px 20px;font-size:14px;cursor:pointer;border-radius:4px}
+.nav button:disabled{opacity:.4;cursor:default}
+.counter{font-size:14px;min-width:80px;text-align:center}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.card{background:#f5f5f5;border-radius:12px;padding:28px 26px}
+.card h3{font-size:20px;font-weight:700;margin-bottom:12px}
+.card p{font-size:16px;line-height:1.5;color:#333}
+.fact-row{display:flex;flex-direction:column;gap:14px;margin-top:8px}
+.bar{display:flex;align-items:center;gap:16px;background:#f5f5f5;border-radius:10px;padding:18px 22px}
+.bar-num{flex:0 0 auto;width:42px;height:42px;border-radius:50%;background:#7000FF;color:#fff;font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.bar-text{font-size:17px;line-height:1.4;color:#333}
+.bar-text strong{color:#000}
+.lead{font-size:20px;line-height:1.5;color:#333;margin-bottom:22px}
+.alert{background:#7000FF;color:#fff;border-radius:12px;padding:22px 26px;font-size:18px;line-height:1.45;margin-bottom:20px}
+.alert strong{font-weight:700}
+.path{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:8px}
+.path-item{background:#f5f5f5;border-radius:10px;padding:18px 14px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px}
+.path-n{width:36px;height:36px;border-radius:50%;background:#7000FF;color:#fff;font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.path-t{font-size:14px;line-height:1.35;color:#333}
+.mono{font-family:Consolas,'Courier New',monospace;background:#f0eafc;color:#7000FF;padding:2px 8px;border-radius:4px;font-size:15px}
+</style></head><body>
+<div class="viewport">
+
+<!-- 1. Обложка -->
+<section class="slide cover purple active">
+  <div class="cover-mid">
+    <p class="kicker wht">ATON Study</p>
+    <h1>Пошаговая инструкция<br>по прохождению тестирования<br>с прокторингом</h1>
+    <p class="subtitle wht">Пробный тест по «Книге знаний»</p>
+  </div>
+  <div class="cover-bottom">
+    <span class="date wht">Июль 2026</span>
+  </div>
+</section>
+
+<!-- 2. Контекст -->
+<section class="slide">
+  <p class="kicker">О тестировании</p>
+  <h2>Вам назначен пробный тест</h2>
+  <div class="body">
+    <div class="alert"><strong>Пробный тест по «Книге знаний»</strong> в ATON Study — проверьте готовность к основному тестированию.</div>
+    <div class="grid2">
+      <div class="card">
+        <h3>Что такое прокторинг</h3>
+        <p>Система контроля прохождения тестирования, которая подтверждает самостоятельность выполнения заданий.</p>
+      </div>
+      <div class="card">
+        <h3>Что потребуется</h3>
+        <p>Яндекс Браузер, доступ к камере, микрофону и экрану. Один монитор — второй экран нужно отключить.</p>
+      </div>
+    </div>
+    <div class="note">Источник: внутренняя инструкция ATON Study, по состоянию на 30.07.2026</div>
+  </div>
+</section>
+
+<!-- 3. Шаг 1 -->
+<section class="slide">
+  <div class="step-meta">Шаг 1 из 4</div>
+  <div class="body">
+    <div class="step-hero">
+      <div class="step-big">1</div>
+      <div class="step-content">
+        <h2>Откройте Яндекс Браузер</h2>
+        <p class="step-text">Тестирование с прокторингом работает только в Яндекс Браузере.</p>
+        <div class="bullets">
+          <div class="bullet"><span class="dot"></span><span>Используйте <strong>только Яндекс Браузер</strong></span></div>
+          <div class="bullet"><span class="dot"></span><span>Иконка доступна на рабочем столе</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="tip"><strong>Важно:</strong> другие браузеры (Chrome, Edge, Firefox) для прохождения теста не подходят</div>
+    <div class="note">Источник: внутренняя инструкция ATON Study, по состоянию на 30.07.2026</div>
+  </div>
+</section>
+
+<!-- 4. Шаг 2 -->
+<section class="slide">
+  <div class="step-meta">Шаг 2 из 4</div>
+  <div class="body">
+    <div class="step-hero">
+      <div class="step-big">2</div>
+      <div class="step-content">
+        <h2>Войдите на платформу ATON Study</h2>
+        <p class="step-text">Перейдите на платформу обучения и авторизуйтесь корпоративными учётными данными.</p>
+        <div class="bullets">
+          <div class="bullet"><span class="dot"></span><span>Адрес: <span class="mono">atonstudy.ispringlearn.ru</span></span></div>
+          <div class="bullet"><span class="dot"></span><span>Логин: <span class="mono">domain\username</span></span></div>
+          <div class="bullet"><span class="dot"></span><span>Пароль — как от рабочего ПК</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="note">Источник: внутренняя инструкция ATON Study, по состоянию на 30.07.2026</div>
+  </div>
+</section>
+
+<!-- 5. Шаг 3 -->
+<section class="slide">
+  <div class="step-meta">Шаг 3 из 4</div>
+  <div class="body">
+    <div class="step-hero">
+      <div class="step-big">3</div>
+      <div class="step-content">
+        <h2>Откройте тест «Книга знаний»</h2>
+        <p class="step-text">Последовательно выполните все этапы прокторинга и предоставьте необходимые доступы.</p>
+        <div class="bullets">
+          <div class="bullet"><span class="dot"></span><span>Предоставьте доступ к <strong>камере</strong></span></div>
+          <div class="bullet"><span class="dot"></span><span>Предоставьте доступ к <strong>микрофону</strong></span></div>
+          <div class="bullet"><span class="dot"></span><span>Предоставьте доступ к <strong>экрану</strong> по запросу системы</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="tip"><strong>Важно:</strong> без доступов к камере, микрофону и экрану тест с прокторингом не запустится</div>
+    <div class="note">Источник: внутренняя инструкция ATON Study, по состоянию на 30.07.2026</div>
+  </div>
+</section>
+
+<!-- 6. Шаг 4 -->
+<section class="slide">
+  <div class="step-meta">Шаг 4 из 4</div>
+  <div class="body">
+    <div class="step-hero">
+      <div class="step-big">4</div>
+      <div class="step-content">
+        <h2>Отключите второй экран</h2>
+        <p class="step-text">По запросу системы оставьте только один монитор. В Windows:</p>
+        <div class="path">
+          <div class="path-item">
+            <div class="path-n">1</div>
+            <div class="path-t">Откройте<br>«Параметры»</div>
+          </div>
+          <div class="path-item">
+            <div class="path-n">2</div>
+            <div class="path-t">Выберите<br>«Система»</div>
+          </div>
+          <div class="path-item">
+            <div class="path-n">3</div>
+            <div class="path-t">Откройте<br>«Дисплей»</div>
+          </div>
+          <div class="path-item">
+            <div class="path-n">4</div>
+            <div class="path-t">«Несколько дисплеев» →<br><strong>Show only on 1</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="note">Источник: внутренняя инструкция ATON Study, по состоянию на 30.07.2026</div>
+  </div>
+</section>
+
+<!-- 7. Обратная связь и поддержка -->
+<section class="slide">
+  <p class="kicker">После тестирования</p>
+  <h2>Обратная связь и поддержка</h2>
+  <div class="body">
+    <div class="grid2">
+      <div class="card">
+        <h3>Обратная связь</h3>
+        <p>Напишите в чат: насколько комфортно прошло тестирование и корректно ли отработала система.</p>
+      </div>
+      <div class="card">
+        <h3>Техническая поддержка</h3>
+        <p>По вопросам работы теста — в express-чат. Опишите проблему и приложите скриншот.</p>
+      </div>
+    </div>
+    <div class="tip" style="margin-top:20px"><strong>ATON Study</strong> · Инструкция по прохождению тестирования с прокторингом</div>
+    <div class="note">Источник: внутренняя инструкция ATON Study, по состоянию на 30.07.2026</div>
+  </div>
+</section>
+
+</div>
+<div class="nav">
+  <button id="prev">← Назад</button>
+  <span class="counter" id="counter">1 / 7</span>
+  <button id="next">Вперёд →</button>
+</div>
+<script>
+const slides=document.querySelectorAll('.slide');let cur=0;
+function show(n){slides[cur].classList.remove('active');cur=Math.max(0,Math.min(slides.length-1,n));slides[cur].classList.add('active');
+document.getElementById('counter').textContent=(cur+1)+' / '+slides.length;
+document.getElementById('prev').disabled=cur===0;document.getElementById('next').disabled=cur===slides.length-1;}
+document.getElementById('prev').onclick=()=>show(cur-1);
+document.getElementById('next').onclick=()=>show(cur+1);
+document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')show(cur-1);if(e.key==='ArrowRight')show(cur+1);});
+show(0);
+</script></body></html>

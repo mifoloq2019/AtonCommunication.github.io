@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ru"><head>
+<meta charset="UTF-8">
+<title>Тестирование по Книге Знаний — one-pager</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#d0d0d0;font-family:'Graphik',Arial,sans-serif;
+     display:flex;justify-content:center;padding:32px;
+     -webkit-print-color-adjust:exact;print-color-adjust:exact}
+.page{width:794px;background:#fff;padding:28px 40px 22px;
+      box-shadow:0 4px 24px rgba(0,0,0,.18);display:flex;flex-direction:column}
+.top{margin-bottom:10px}
+.top-title{font-size:14px;font-weight:700;color:#7000FF}
+.banner{background:#7000FF;border-radius:10px;padding:14px 20px;margin-bottom:12px;color:#fff}
+.banner-kicker{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.9;margin-bottom:4px}
+.banner h1{font-size:22px;font-weight:700;line-height:1.2}
+.intro{background:#f3ebff;border-radius:10px;padding:12px 16px;margin-bottom:12px}
+.intro strong{display:block;font-size:13px;color:#7000FF;margin-bottom:4px}
+.intro p{font-size:12px;line-height:1.4;color:#333}
+.section-title{font-size:15px;font-weight:700;color:#111;margin-bottom:10px}
+.steps{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.step{display:grid;grid-template-columns:40px 1fr auto;gap:12px;align-items:start;background:#f5f5f7;border-radius:10px;padding:10px 12px}
+.step-num{width:34px;height:34px;border-radius:50%;background:#7000FF;color:#fff;
+          font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.step h3{font-size:13px;font-weight:700;color:#111;margin-bottom:4px}
+.step ul{list-style:none;display:flex;flex-direction:column;gap:3px}
+.step li{font-size:12px;line-height:1.35;color:#333;padding-left:12px;position:relative}
+.step li::before{content:'';position:absolute;left:0;top:5px;width:5px;height:5px;
+                 border-radius:50%;background:#7000FF}
+.step .path-line{font-size:11.5px;line-height:1.35;color:#7000FF;font-weight:700;margin-top:2px}
+.chrome-icon{width:56px;height:auto;object-fit:contain;margin-top:0}
+.bottom{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.card{border-radius:10px;padding:12px 14px;background:#f5f5f7}
+.card h4{font-size:12.5px;font-weight:700;color:#111;margin-bottom:4px}
+.card p{font-size:11.5px;line-height:1.4;color:#333}
+.footer{margin-top:12px;padding-top:8px;border-top:1px solid #ddd;font-size:10px;color:#999}
+</style>
+</head><body>
+<div class="page">
+
+  <div class="top">
+    <div class="top-title">Тестирование по Книге Знаний</div>
+  </div>
+
+  <div class="banner">
+    <div class="banner-kicker">Пошаговая инструкция</div>
+    <h1>Прохождение тестирования с прокторингом</h1>
+  </div>
+
+  <div class="intro">
+    <strong>Вам назначен пробный тест по «Книге знаний» в ATON Study</strong>
+    <p>Прокторинг — система контроля прохождения тестирования, которая подтверждает самостоятельность выполнения заданий.</p>
+  </div>
+
+  <div class="section-title">Как пройти тестирование</div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <h3>Откройте Google Chrome</h3>
+        <ul>
+          <li>Для корректной работы прокторинга используйте Google Chrome</li>
+          <li>Иконка доступна на рабочем столе</li>
+        </ul>
+      </div>
+      <img class="chrome-icon" src="instr_extract/chrome_icon.png" alt="Google Chrome">
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <h3>Войдите на платформу ATON Study</h3>
+        <ul>
+          <li>Перейдите на atonstudy.ispringlearn.ru</li>
+          <li>Логин: domain\username, пароль — как от рабочего ПК</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <h3>Откройте тест «Книга знаний»</h3>
+        <ul>
+          <li>Последовательно выполните все этапы прокторинга</li>
+          <li>Предоставьте доступ к камере, микрофону и экрану по запросу</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <h3>Отключите второй экран (по запросу системы)</h3>
+        <div class="path-line">Settings → System → Display → Multiple displays → Show only on 1</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">5</div>
+      <div>
+        <h3>Запустите тест «Книга знаний»</h3>
+        <ul>
+          <li>Появится окно «Условия проведения мероприятия» → нажмите «Далее» для запуска проверки оборудования</li>
+          <li>Пройдите все этапы прокторинга и разрешите доступ к камере, микрофону и экрану</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">6</div>
+      <div>
+        <h3>Во время теста можно пользоваться «Книгой знаний»</h3>
+        <ul>
+          <li>Вы можете открыть её в соседней вкладке с тестированием</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">7</div>
+      <div>
+        <h3>После теста верните настройки экрана</h3>
+        <div class="path-line">Right-click on the desktop → Display settings → Multiple displays → Extend these displays</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">Инструкция по прохождению тестирования с прокторингом</div>
+</div>
+</body></html>

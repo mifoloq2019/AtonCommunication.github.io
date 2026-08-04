@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="UTF-8">
+<title>РЕПО с ЦК — превью</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#1a1a1a;font-family:'Graphik',Arial,sans-serif;display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:24px}
+.viewport{width:1280px;height:720px;background:#fff;position:relative;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.4)}
+.slide{display:none;width:100%;height:100%;padding:44px 64px 40px;color:#000;flex-direction:column}
+.slide.active{display:flex}
+h2{font-size:28px;font-weight:700;flex:0 0 auto;margin-bottom:20px}
+.body{flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;min-height:0}
+.note{flex:0 0 auto;font-size:12px;color:#999;margin-top:16px}
+.grid{display:grid;gap:16px;flex:0 0 auto}
+.grid2{grid-template-columns:1fr 1fr}
+.card{background:#f5f5f5;border-radius:10px;padding:24px;display:flex;flex-direction:column;justify-content:center;min-height:140px}
+.card h3{font-size:16px;font-weight:700;margin-bottom:10px}
+.card p{font-size:14px;line-height:1.5;color:#444}
+.accent-card{background:#7000FF;color:#fff}
+.accent-card p{color:#e6d9ff}
+.wht{color:#fff}
+.banner{flex:0 0 auto;background:#7000FF;color:#fff;border-radius:12px;padding:28px 32px;text-align:center}
+.banner-big{font-size:22px;font-weight:700;line-height:1.35}
+.alert{flex:0 0 auto;background:#f5f5f5;border-left:5px solid #7000FF;padding:18px 22px;font-size:15px;line-height:1.45;border-radius:0 10px 10px 0;margin-bottom:0}
+.bullets{display:flex;flex-direction:column;gap:10px;margin-top:4px}
+.bullet{display:flex;gap:12px;align-items:flex-start;font-size:14px;line-height:1.5;color:#333}
+.dot{width:9px;height:9px;border-radius:50%;background:#7000FF;margin-top:6px;flex:0 0 auto}
+.tariff-wrap{flex:0 0 auto;margin-top:20px;border:2px solid #7000FF;border-radius:12px;padding:18px 12px 14px}
+.tariff-title{text-align:center;font-size:14px;font-weight:700;margin-bottom:14px;color:#111}
+.tariff-row{display:grid;grid-template-columns:repeat(6,1fr);gap:0}
+.tariff-col{text-align:center;padding:0 8px;border-right:1px solid #7000FF}
+.tariff-col:last-child{border-right:none}
+.tariff-name{font-size:13px;font-weight:700;margin-bottom:6px}
+.tariff-rate{font-size:22px;font-weight:700;color:#7000FF}
+.tariff-sub{display:block;font-size:11px;color:#999;margin-top:4px}
+.nav{margin-top:16px;display:flex;gap:12px;align-items:center;color:#fff}
+.nav button{background:#7000FF;color:#fff;border:none;padding:10px 20px;font-size:14px;cursor:pointer;border-radius:4px}
+.nav button:disabled{opacity:.4;cursor:default}
+.counter{font-size:14px;min-width:80px;text-align:center}
+</style></head><body>
+<div class="viewport">
+<section class="slide">
+  <h2>РЕПО с ЦК для юридических лиц</h2>
+  <div class="body">
+    <div class="banner">
+      <p class="banner-big">с 20 июля 2026 — новый инструмент для краткосрочного размещения рублёвой ликвидности</p>
+    </div>
+    <div class="grid grid2" style="margin-top:20px">
+      <div class="card">
+        <h3>Доступ</h3>
+        <p>Автоматически предоставляется всем юридическим лицам в <strong>QUIK</strong></p>
+      </div>
+      <div class="card accent-card">
+        <h3 class="wht">Инструменты</h3>
+        <p class="wht">Однодневные сделки РЕПО с акциями, облигациями и клиринговыми сертификатами участия (КСУ)</p>
+      </div>
+    </div>
+    <div class="alert" style="margin-top:18px">
+      <strong>Доступно только размещение денежных средств</strong> — заём ликвидности через РЕПО с ЦК не предусмотрен
+    </div>
+    <div class="note">Источник: внутренняя рассылка АТОН, по состоянию на 08.07.2026</div>
+  </div>
+</section>
+<section class="slide">
+  <h2>Условия размещения и тарифы</h2>
+  <div class="body">
+    <div class="grid grid2">
+      <div class="card">
+        <h3>Торговый режим</h3>
+        <div class="bullets">
+          <div class="bullet"><span class="dot"></span><span>Торговать можно <strong>до 17:00</strong></span></div>
+          <div class="bullet"><span class="dot"></span><span>После 17:00 свободные рублёвые остатки размещаются казначейством автоматически по ставке <strong>RUSFAR − 0,8%</strong> (вместо стандартной RUSFAR − 0,5%)</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Подача заявок</h3>
+        <div class="bullets">
+          <div class="bullet"><span class="dot"></span><span>Заявки принимаются <strong>с голоса</strong></span></div>
+          <div class="bullet"><span class="dot"></span><span>В дальнейшем — подписание поручений через чат с трейдером или через менеджера</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="tariff-wrap">
+      <div class="tariff-title">Предложение, % годовых</div>
+      <div class="tariff-row"><div class="tariff-col"><div class="tariff-name">Тариф 2</div><div class="tariff-rate">2%</div></div><div class="tariff-col"><div class="tariff-name">Тариф 3</div><div class="tariff-rate">1,5%</div></div><div class="tariff-col"><div class="tariff-name">Тариф 4</div><div class="tariff-rate">1%</div></div><div class="tariff-col"><div class="tariff-name">Тариф 5</div><div class="tariff-rate">0,75%</div><span class="tariff-sub">от 200 млн</span></div><div class="tariff-col"><div class="tariff-name">Тариф 6</div><div class="tariff-rate">0,6%</div><span class="tariff-sub">от 800 млн</span></div><div class="tariff-col"><div class="tariff-name">Тариф 7</div><div class="tariff-rate">0,6%</div></div></div>
+    </div>
+    <div class="note">Источник: внутренняя рассылка АТОН, по состоянию на 08.07.2026</div>
+  </div>
+</section></div>
+<div class="nav">
+  <button id="prev">← Назад</button>
+  <span class="counter" id="counter">1 / 2</span>
+  <button id="next">Вперёд →</button>
+</div>
+<script>
+const slides=document.querySelectorAll('.slide');let cur=0;
+function show(n){slides[cur].classList.remove('active');cur=Math.max(0,Math.min(slides.length-1,n));slides[cur].classList.add('active');
+document.getElementById('counter').textContent=(cur+1)+' / '+slides.length;
+document.getElementById('prev').disabled=cur===0;document.getElementById('next').disabled=cur===slides.length-1;}
+document.getElementById('prev').onclick=()=>show(cur-1);
+document.getElementById('next').onclick=()=>show(cur+1);
+document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')show(cur-1);if(e.key==='ArrowRight')show(cur+1);});
+show(0);
+</script></body></html>

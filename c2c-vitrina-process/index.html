@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>АТОН — Витрина интересов и сделки клиент–клиент</title>
+<style>
+  :root {
+    --aton: #7000FF;
+    --aton-soft: #f4efff;
+    --ink: #1a1a1a;
+    --muted: #6b6b6b;
+    --line: #e6e6e6;
+    --bg: #f3f4f6;
+    --sell: #c62828;
+    --buy: #1565c0;
+    --ok: #2e7d32;
+    --warn: #ed6c02;
+    --hold: #6d4c41;
+    --ui-blue: #2f6fed;
+    --sidebar: #f0f1f3;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Graphik', Arial, sans-serif;
+    background: #121212;
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* —— Shell —— */
+  .app {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    min-height: 100vh;
+  }
+  .rail {
+    background: #1a1a1a;
+    color: #fff;
+    padding: 28px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border-right: 1px solid #2a2a2a;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  .brand {
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: #a78bfa;
+    margin-bottom: 6px;
+  }
+  .rail h1 {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 18px;
+  }
+  .rail-note {
+    font-size: 12px;
+    color: #999;
+    line-height: 1.45;
+    margin-bottom: 18px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #333;
+  }
+  .nav-btn {
+    text-align: left;
+    background: transparent;
+    border: none;
+    color: #ccc;
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    line-height: 1.35;
+    font-family: inherit;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .nav-btn:hover { background: #2a2a2a; color: #fff; }
+  .nav-btn.active { background: var(--aton); color: #fff; }
+  .nav-n {
+    flex: 0 0 auto;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.12);
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+  }
+  .nav-btn.active .nav-n { background: rgba(255,255,255,.25); }
+  .rail-foot {
+    margin-top: auto;
+    padding-top: 16px;
+    font-size: 11px;
+    color: #666;
+    line-height: 1.4;
+  }
+
+  .stage {
+    background: #ededed;
+    padding: 28px 32px 40px;
+    min-height: 100vh;
+  }
+  .panel { display: none; }
+  .panel.active { display: block; animation: fade .25s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  .panel-head { margin-bottom: 20px; max-width: 1100px; }
+  .kicker {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--aton);
+    margin-bottom: 8px;
+  }
+  .panel-head h2 {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .lead {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.5;
+    max-width: 820px;
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 22px 24px;
+    box-shadow: 0 1px 0 rgba(0,0,0,.04);
+  }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .grid2, .grid3 { max-width: 1100px; }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background: var(--aton-soft);
+    color: var(--aton);
+  }
+  .tag.red { background: #fdecea; color: var(--sell); }
+  .tag.blue { background: #e8f0fe; color: var(--buy); }
+  .tag.green { background: #e8f5e9; color: var(--ok); }
+  .tag.orange { background: #fff3e0; color: var(--warn); }
+  .tag.brown { background: #efebe9; color: var(--hold); }
+  .tag.gray { background: #f0f0f0; color: #555; }
+
+  .card h3 { font-size: 16px; margin-bottom: 10px; }
+  .card p, .card li { font-size: 14px; line-height: 1.5; color: #333; }
+  .card ul { padding-left: 18px; }
+  .card li + li { margin-top: 6px; }
+
+  .alert {
+    background: var(--aton);
+    color: #fff;
+    border-radius: 12px;
+    padding: 16px 18px;
+    font-size: 14px;
+    line-height: 1.45;
+    margin-bottom: 16px;
+    max-width: 1100px;
+  }
+  .alert strong { font-weight: 700; }
+
+  .soft {
+    background: #fff;
+    border-left: 4px solid var(--aton);
+    border-radius: 0 12px 12px 0;
+    padding: 14px 16px;
+    font-size: 14px;
+    line-height: 1.45;
+    color: #333;
+    max-width: 1100px;
+    margin-bottom: 16px;
+  }
+
+  /* —— Process map —— */
+  .flow {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+    max-width: 1100px;
+    margin-bottom: 16px;
+  }
+  .flow-step {
+    background: #fff;
+    border-radius: 12px;
+    padding: 14px 12px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color .15s, transform .15s;
+    min-height: 150px;
+  }
+  .flow-step:hover { transform: translateY(-2px); }
+  .flow-step.on { border-color: var(--aton); }
+  .flow-n {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--aton); color: #fff;
+    font-size: 13px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 10px;
+  }
+  .flow-step h4 { font-size: 13px; margin-bottom: 6px; line-height: 1.3; }
+  .flow-step p { font-size: 11px; color: var(--muted); line-height: 1.35; }
+  .flow-detail {
+    max-width: 1100px;
+    background: #fff;
+    border-radius: 14px;
+    padding: 18px 20px;
+    border: 1px solid var(--line);
+  }
+  .flow-detail h3 { font-size: 16px; margin-bottom: 8px; }
+  .flow-detail p { font-size: 14px; color: #333; line-height: 1.5; margin-bottom: 10px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    font-size: 12px;
+    background: var(--bg);
+    border-radius: 999px;
+    padding: 6px 10px;
+    color: #444;
+  }
+
+  /* —— UI mock —— */
+  .ui-shell {
+    max-width: 1100px;
+    background: var(--bg);
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid #ddd;
+    box-shadow: 0 10px 40px rgba(0,0,0,.08);
+  }
+  .ui-top {
+    display: flex;
+    min-height: 520px;
+  }
+  .ui-side {
+    width: 168px;
+    background: var(--sidebar);
+    border-right: 1px solid #e0e0e0;
+    padding: 18px 12px;
+    flex: 0 0 auto;
+  }
+  .ui-side-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .ui-tab {
+    font-size: 13px;
+    padding: 9px 10px;
+    border-radius: 6px;
+    margin-bottom: 4px;
+    cursor: pointer;
+    color: #333;
+    border: none;
+    background: transparent;
+    width: 100%;
+    text-align: left;
+    font-family: inherit;
+  }
+  .ui-tab.active { background: #e4e6ea; font-weight: 700; }
+  .ui-main { flex: 1; background: #fff; padding: 16px 18px; min-width: 0; }
+  .ui-crumb {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .ui-crumb span { color: #9aa0a6; font-weight: 500; }
+  .btn-primary {
+    background: var(--ui-blue);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 9px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .btn-primary:hover { filter: brightness(.95); }
+  .btn-ghost {
+    background: #fff;
+    border: 1px solid #d0d5dd;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .toolbar {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin: 12px 0;
+    background: #f3f4f6;
+    padding: 8px;
+    border-radius: 8px;
+  }
+  .search {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 13px;
+    outline: none;
+    font-family: inherit;
+  }
+  .table-wrap { overflow-x: auto; }
+  table.ui {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    min-width: 920px;
+  }
+  table.ui th {
+    text-align: left;
+    color: #9aa0a6;
+    font-weight: 600;
+    letter-spacing: .04em;
+    padding: 8px 8px;
+    border-bottom: 1px solid #eee;
+    white-space: nowrap;
+  }
+  table.ui td {
+    padding: 10px 8px;
+    border-bottom: 1px solid #f2f2f2;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+  table.ui tr:hover td { background: #fafbff; }
+  .side-buy { color: var(--buy); font-weight: 700; }
+  .side-sell { color: var(--sell); font-weight: 700; }
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .status.live { background: #e8f5e9; color: var(--ok); }
+  .status.wait { background: #fff3e0; color: var(--warn); }
+  .status.hold { background: #efebe9; color: var(--hold); }
+  .status.kyc { background: #fdecea; color: var(--sell); }
+  .status.match { background: var(--aton-soft); color: var(--aton); }
+  .footnote {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 4px;
+    background: #fff3e0;
+    color: var(--warn);
+    border-radius: 3px;
+    padding: 1px 5px;
+    font-size: 9px;
+    font-weight: 700;
+    cursor: help;
+  }
+  .ui-annotate {
+    margin-top: 12px;
+    padding: 12px 14px;
+    background: #1a1a1a;
+    color: #fff;
+    border-radius: 0 0 14px 14px;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  .ui-annotate strong { color: #c4b5fd; }
+
+  /* —— Modal form —— */
+  .modal-grid {
+    display: grid;
+    grid-template-columns: 1.05fr .95fr;
+    gap: 16px;
+    max-width: 1100px;
+  }
+  .form-row { margin-bottom: 12px; }
+  .form-row label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: #777;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    margin-bottom: 5px;
+  }
+  .form-row input, .form-row select {
+    width: 100%;
+    border: 1px solid #d8d8d8;
+    border-radius: 6px;
+    padding: 9px 10px;
+    font-size: 13px;
+    font-family: inherit;
+    background: #fff;
+  }
+  .form-row.two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .price-check {
+    border-radius: 10px;
+    padding: 14px;
+    margin-top: 8px;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  .price-check.ok { background: #e8f5e9; color: #1b5e20; }
+  .price-check.bad { background: #fff3e0; color: #e65100; }
+  .path-box {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+  .path-box h4 { font-size: 13px; margin-bottom: 8px; }
+  .path-box ol { padding-left: 18px; font-size: 13px; color: #333; line-height: 1.5; }
+  .path-box li + li { margin-top: 4px; }
+
+  /* —— Client phone mock —— */
+  .phones {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    max-width: 1100px;
+  }
+  .phone {
+    background: #fff;
+    border-radius: 18px;
+    border: 1px solid #ddd;
+    padding: 14px 12px 16px;
+    min-height: 280px;
+    position: relative;
+  }
+  .phone-bar {
+    width: 42px; height: 5px; border-radius: 99px;
+    background: #ddd; margin: 0 auto 12px;
+  }
+  .phone-step {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--aton);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    margin-bottom: 8px;
+  }
+  .phone h4 { font-size: 14px; margin-bottom: 8px; line-height: 1.3; }
+  .phone p { font-size: 12px; color: #555; line-height: 1.4; }
+  .phone .fake-btn {
+    margin-top: 12px;
+    background: var(--aton);
+    color: #fff;
+    border-radius: 8px;
+    padding: 8px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .phone .check {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    margin-top: 10px;
+    font-size: 11px;
+    color: #333;
+    background: #f7f7f7;
+    padding: 8px;
+    border-radius: 8px;
+  }
+  .phone .box-el {
+    margin-top: 8px;
+    background: #f5f5f5;
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 11px;
+    color: #444;
+  }
+
+  /* —— Roles —— */
+  .role-row {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  .role-row:last-child { border-bottom: none; }
+  .role-name { font-weight: 700; }
+
+  .controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+    max-width: 1100px;
+  }
+  .controls button {
+    background: #1a1a1a;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .controls button.secondary { background: #fff; color: #111; border: 1px solid #ccc; }
+
+  .matrix {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .matrix th {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 2px solid #111;
+    font-weight: 700;
+  }
+  .matrix td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+    line-height: 1.4;
+  }
+  .matrix td:first-child { font-weight: 700; width: 22%; }
+
+  @media (max-width: 1100px) {
+    .app { grid-template-columns: 1fr; }
+    .rail { position: relative; height: auto; }
+    .flow, .phones, .modal-grid, .grid2, .grid3 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="rail">
+    <div class="brand">АТОН · Внутренний процесс</div>
+    <h1>Сделки клиент–клиент по Pre-IPO активам</h1>
+    <p class="rail-note">Визуализация для ГД, Compliance и Trading. Базовый UI: «Торговля → Интересы / Приказы».</p>
+
+    <button class="nav-btn active" data-panel="0"><span class="nav-n">1</span><span>Зачем и как устроен принцип</span></button>
+    <button class="nav-btn" data-panel="1"><span class="nav-n">2</span><span>Правила: цена ±20% и HOLD</span></button>
+    <button class="nav-btn" data-panel="2"><span class="nav-n">3</span><span>Карта процесса end-to-end</span></button>
+    <button class="nav-btn" data-panel="3"><span class="nav-n">4</span><span>UI: витрина интересов</span></button>
+    <button class="nav-btn" data-panel="4"><span class="nav-n">5</span><span>Создание интереса и ветка PCD</span></button>
+    <button class="nav-btn" data-panel="5"><span class="nav-n">6</span><span>Matching → реальные приказы</span></button>
+    <button class="nav-btn" data-panel="6"><span class="nav-n">7</span><span>Путь клиента в ATON Line</span></button>
+    <button class="nav-btn" data-panel="7"><span class="nav-n">8</span><span>Контроли и роли</span></button>
+
+    <div class="rail-foot">Август 2026 · Черновик для обсуждения<br>Не блокирует активы до реальных приказов</div>
+  </aside>
+
+  <main class="stage">
+
+    <!-- 1 -->
+    <section class="panel active" id="p0">
+      <div class="panel-head">
+        <div class="kicker">Суть инициативы</div>
+        <h2>Внутренний рынок интересов по активам, которые АТОН ранее размещал</h2>
+        <p class="lead">Менеджеры выставляют несвязывающие интересы. Деньги и бумаги клиента не блокируются. Когда интересы сходятся по цене (и объёму) — стороны переходят в реальные торговые поручения клиент–клиент.</p>
+      </div>
+
+      <div class="alert"><strong>Ключевой дизайн-принцип:</strong> интерес ≠ приказ. На витрине нет блокировок — клиент продолжает распоряжаться деньгами и бумагами до момента реального поручения.</div>
+
+      <div class="grid3">
+        <div class="card">
+          <span class="tag">Проблема</span>
+          <h3 style="margin-top:12px">Разрозненные активы Pre-IPO</h3>
+          <p>NAV обновляется по-разному: от ежеквартально до раза в год / полгода. Унифицированный «рыночный» стакан не подходит без правил ценообразования.</p>
+        </div>
+        <div class="card">
+          <span class="tag blue">Решение</span>
+          <h3 style="margin-top:12px">Витрина интересов</h3>
+          <p>Единый раздел в «Торговле»: менеджеры видят стороны, цены, объёмы, сроки. Могут обсуждать и двигать цену, пока интересы не сойдутся.</p>
+        </div>
+        <div class="card">
+          <span class="tag green">Эффект</span>
+          <h3 style="margin-top:12px">Сделка внутри АТОН</h3>
+          <p>После matching — уведомление менеджерам → раздел «Приказы клиент–клиент» с предзаполненными условиями и полным compliance-контуром покупки.</p>
+        </div>
+      </div>
+
+      <div style="height:16px"></div>
+      <div class="grid2">
+        <div class="card">
+          <span class="tag red">Продажа — проще</span>
+          <h3 style="margin-top:12px">Меньше входных барьеров</h3>
+          <ul>
+            <li>Не требуется заново знакомиться с меморандумами фонда</li>
+            <li>Не требуется KYC происхождения средств перед продажей</li>
+            <li>Интерес на продажу быстрее появляется на витрине</li>
+          </ul>
+        </div>
+        <div class="card">
+          <span class="tag blue">Покупка — сложнее</span>
+          <h3 style="margin-top:12px">Если фонда у клиента ещё не было</h3>
+          <ul>
+            <li>Ознакомление с меморандумами + SMS-подпись</li>
+            <li>Анкетa проф. инвестора (деньги в $ — где и сколько)</li>
+            <li>При необходимости — KYC / документы / письмо администратору фонда</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2 -->
+    <section class="panel" id="p1">
+      <div class="panel-head">
+        <div class="kicker">Ценообразование и риск</div>
+        <h2>Два стакана по частоте NAV + эскалация за пределами ±20%</h2>
+        <p class="lead">Критерий разграничения — частота расчёта NAV. Выход за коридор возможен только с согласованием руководителя PCD.</p>
+      </div>
+
+      <div class="grid2">
+        <div class="card">
+          <span class="tag">Корзина A</span>
+          <h3 style="margin-top:12px">NAV ежеквартально и чаще</h3>
+          <p>Допустимый диапазон котировок: <strong>±20% от последнего NAV</strong>.</p>
+          <p style="margin-top:10px;color:#666;font-size:13px">Типичный кейс: фонд с регулярной оценкой.</p>
+        </div>
+        <div class="card">
+          <span class="tag orange">Корзина B</span>
+          <h3 style="margin-top:12px">NAV реже квартала</h3>
+          <p>Допустимый диапазон: <strong>±20% от индикативной оценки CIB / Alt.Invest</strong>.</p>
+          <p style="margin-top:10px;color:#666;font-size:13px">Используется, когда NAV устаревает и не является рабочим ориентиром.</p>
+        </div>
+      </div>
+
+      <div style="height:16px"></div>
+      <div class="soft"><strong>За пределами ±20%:</strong> менеджер заполняет интерес → отправка на pre-check руководителю PCD → только после approve интерес уходит клиенту в ATON Line для ознакомления с меморандумами и выставления на витрину.</div>
+
+      <div class="card" style="max-width:1100px">
+        <h3>Существенные изменения цены (индикатив)</h3>
+        <div class="role-row">
+          <div class="role-name">CIB / Alt.Invest</div>
+          <div>Заранее уведомляют коллег, <strong>в первую очередь Compliance</strong>, о существенном изменении индикативной цены / NAV.</div>
+        </div>
+        <div class="role-row">
+          <div class="role-name">Система</div>
+          <div>Сделки и интересы по такому фонду переводятся в статус <span class="status hold">HOLD</span> — новые matching и приказы не проводятся, пока HOLD не снят.</div>
+        </div>
+        <div class="role-row">
+          <div class="role-name">Compliance</div>
+          <div>Получает ранний сигнал, оценивает риск несправедливой цены / инсайда, даёт рамку на возобновление торгов интересами.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 -->
+    <section class="panel" id="p2">
+      <div class="panel-head">
+        <div class="kicker">End-to-end</div>
+        <h2>Шесть этапов: от интереса до торгового поручения</h2>
+        <p class="lead">Кликните на этап — справа/ниже откроется детализация. Это опорный слайд для синхронизации трёх функций.</p>
+      </div>
+
+      <div class="flow" id="flowMap">
+        <div class="flow-step on" data-f="0">
+          <div class="flow-n">1</div>
+          <h4>Создание интереса</h4>
+          <p>Менеджер: актив, счёт, сторона, объём, цена, срок</p>
+        </div>
+        <div class="flow-step" data-f="1">
+          <div class="flow-n">2</div>
+          <h4>Проверка ±20%</h4>
+          <p>В коридоре → клиенту; вне → pre-check PCD</p>
+        </div>
+        <div class="flow-step" data-f="2">
+          <div class="flow-n">3</div>
+          <h4>ATON Line</h4>
+          <p>Меморандумы + SMS. Интерес становится «живым»</p>
+        </div>
+        <div class="flow-step" data-f="3">
+          <div class="flow-n">4</div>
+          <h4>Витрина</h4>
+          <p>Все менеджеры видят интересы, обсуждают, двигают цену</p>
+        </div>
+        <div class="flow-step" data-f="4">
+          <div class="flow-n">5</div>
+          <h4>Matching</h4>
+          <p>Сход цены/объёма → алерт двум менеджерам (+ KYC-флаг)</p>
+        </div>
+        <div class="flow-step" data-f="5">
+          <div class="flow-n">6</div>
+          <h4>Приказы C2C</h4>
+          <p>Предзаполнение → поручение → анкета / KYC при покупке</p>
+        </div>
+      </div>
+
+      <div class="flow-detail" id="flowDetail">
+        <h3>1. Создание интереса</h3>
+        <p>Менеджер в разделе «Интересы» заполняет 6 параметров. Это ещё не торговое поручение: бумаги и деньги не блокируются.</p>
+        <div class="chips">
+          <span class="chip">1. Актив (название + ISIN)</span>
+          <span class="chip">2. Номер счёта</span>
+          <span class="chip">3. Покупка / Продажа</span>
+          <span class="chip">4. Объём</span>
+          <span class="chip">5. Цена</span>
+          <span class="chip">6. Срок: без даты / до даты / до смены NAV·индикатива</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 UI -->
+    <section class="panel" id="p3">
+      <div class="panel-head">
+        <div class="kicker">Продуктовый контур</div>
+        <h2>Витрина интересов в текущем UI «Торговля»</h2>
+        <p class="lead">Базируемся на существующем разделе: вкладка «Интересы» — витрина, «Приказы» — реальные клиент–клиент поручения после matching.</p>
+      </div>
+
+      <div class="ui-shell">
+        <div class="ui-top">
+          <aside class="ui-side">
+            <div class="ui-side-title">Торговля <span>›</span></div>
+            <button class="ui-tab active" id="tabInterests">Интересы</button>
+            <button class="ui-tab" id="tabOrders">Приказы</button>
+          </aside>
+          <div class="ui-main">
+            <div class="ui-crumb" id="uiCrumb">Торговля <span>/</span> Интересы</div>
+            <button class="btn-primary" id="btnCreate">+ Создать интерес</button>
+            <div class="toolbar">
+              <button class="btn-ghost">Фильтры</button>
+              <input class="search" placeholder="Поиск по тикеру, клиенту, sales…">
+            </div>
+            <div class="table-wrap">
+              <table class="ui" id="uiTable">
+                <thead>
+                  <tr>
+                    <th>СТОРОНА</th>
+                    <th>СТАТУС</th>
+                    <th>ТИКЕР / ISIN</th>
+                    <th>ОБЪЁМ</th>
+                    <th>ЦЕНА</th>
+                    <th>ОРИЕНТИР</th>
+                    <th>СРОК</th>
+                    <th>КЛИЕНТ</th>
+                    <th>SALES</th>
+                    <th>ФЛАГИ</th>
+                  </tr>
+                </thead>
+                <tbody id="uiBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="ui-annotate" id="uiAnnotate">
+          <strong>Интересы:</strong> несвязывающие намерения. Менеджеры АТОН видят витрину целиком, чтобы сводить стороны и торговаться по цене без блокировок активов.
+        </div>
+      </div>
+
+      <div class="controls">
+        <button type="button" id="toggleHoldDemo">Показать фонд на HOLD</button>
+        <button type="button" class="secondary" id="gotoCreate">Открыть форму создания →</button>
+      </div>
+    </section>
+
+    <!-- 5 form -->
+    <section class="panel" id="p4">
+      <div class="panel-head">
+        <div class="kicker">Шаг создания</div>
+        <h2>Интерес: автопроверка коридора и ветвление</h2>
+        <p class="lead">Измените цену в форме — система покажет, уйдёт ли интерес сразу клиенту или сначала руководителю PCD.</p>
+      </div>
+
+      <div class="modal-grid">
+        <div class="card">
+          <h3>Новый интерес</h3>
+          <div class="form-row">
+            <label>Актив</label>
+            <select id="fAsset">
+              <option value="q">Fund Alpha Growth (NAV ежеквартально) — ISIN LU000AA</option>
+              <option value="r">Fund Beta Ventures (NAV раз в год) — ISIN MU000BB</option>
+            </select>
+          </div>
+          <div class="form-row two">
+            <div>
+              <label>Счёт клиента</label>
+              <input value="40817… / 102938">
+            </div>
+            <div>
+              <label>Сторона</label>
+              <select id="fSide">
+                <option>Покупка</option>
+                <option selected>Продажа</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row two">
+            <div>
+              <label>Объём (шт.)</label>
+              <input type="number" value="25000">
+            </div>
+            <div>
+              <label>Цена, $</label>
+              <input type="number" id="fPrice" value="98" step="0.1">
+            </div>
+          </div>
+          <div class="form-row">
+            <label>Срок интереса</label>
+            <select>
+              <option>Без даты окончания</option>
+              <option selected>До даты: 30.09.2026</option>
+              <option>До изменения индикативa / NAV</option>
+            </select>
+          </div>
+          <div id="priceBox" class="price-check ok"></div>
+          <div style="margin-top:14px;display:flex;gap:8px">
+            <button class="btn-primary" type="button" id="submitInterest">Отправить</button>
+            <button class="btn-ghost" type="button" id="bumpPrice">Симулировать цену вне ±20%</button>
+          </div>
+        </div>
+
+        <div>
+          <div class="path-box" id="pathOk">
+            <span class="tag green">Ветка A · внутри ±20%</span>
+            <h4 style="margin-top:10px">Сразу клиенту</h4>
+            <ol>
+              <li>Интерес уходит в ATON Line</li>
+              <li>Клиент знакомится с меморандумами (если требуется по сценарию)</li>
+              <li>Подтверждает SMS-паролем</li>
+              <li>Интерес появляется на витрине до выбранного срока</li>
+            </ol>
+          </div>
+          <div class="path-box" id="pathBad" style="opacity:.45">
+            <span class="tag orange">Ветка B · вне ±20%</span>
+            <h4 style="margin-top:10px">Pre-check руководителя PCD</h4>
+            <ol>
+              <li>Статус интереса: «На согласовании PCD»</li>
+              <li>Руководитель PCD approve / reject</li>
+              <li>Только после approve — push клиенту в ATON Line</li>
+              <li>Далее — та же логика выставления на витрину</li>
+            </ol>
+          </div>
+          <div class="soft" style="margin:0">Ориентир для корзины A — последний NAV; для корзины B — индикатив CIB/Alt.Invest. В демо: NAV/индикатив = <strong>$100</strong>.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 matching -->
+    <section class="panel" id="p5">
+      <div class="panel-head">
+        <div class="kicker">Сведение сторон</div>
+        <h2>Когда интересы сошлись — переход в «Приказы клиент–клиент»</h2>
+        <p class="lead">Параметры, согласованные на витрине, подтягиваются в форму реального поручения. Блокировка активов начинается только здесь.</p>
+      </div>
+
+      <div class="grid2">
+        <div class="card">
+          <span class="tag">Уведомление</span>
+          <h3 style="margin-top:12px">Двум менеджерам</h3>
+          <p>Система сообщает, что по активу X интересы сошлись по цене (идеально — и по объёму). Можно выставлять реальные приказы на покупку и продажу.</p>
+          <div style="margin-top:12px;background:#f7f7f7;border-radius:10px;padding:12px;font-size:13px;line-height:1.45">
+            <strong>Алерт:</strong> Interest match · Fund Alpha · Buy 25k @ $98 ↔ Sell 25k @ $98<br>
+            Sales: Иванов / Петрова · Открыть приказ C2C
+          </div>
+        </div>
+        <div class="card">
+          <span class="tag orange">KYC-сноска</span>
+          <h3 style="margin-top:12px">До создания поручения на покупку</h3>
+          <p>Если по фонду требуется KYC, менеджеру покупателя:</p>
+          <ul>
+            <li>email-алерт: «нужен KYC / документы о происхождении средств»</li>
+            <li>в UI приказа — визуальная сноска у тикера / статус <span class="status kyc">KYC req</span></li>
+            <li>варианты: полный пакет документов или упрощённое письмо администратору фонда (ФИО1 ↔ ФИО2, non-sanctioned)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="height:16px"></div>
+      <div class="ui-shell">
+        <div class="ui-top" style="min-height:auto">
+          <aside class="ui-side">
+            <div class="ui-side-title">Торговля <span>›</span></div>
+            <div class="ui-tab">Интересы</div>
+            <div class="ui-tab active">Приказы</div>
+          </aside>
+          <div class="ui-main">
+            <div class="ui-crumb">Торговля <span>/</span> Приказы клиент–клиент</div>
+            <button class="btn-primary">Создать поручение</button>
+            <div class="toolbar"><button class="btn-ghost">Фильтры</button><input class="search" placeholder="Поиск…" disabled></div>
+            <div class="table-wrap">
+              <table class="ui">
+                <thead>
+                  <tr>
+                    <th>СТОРОНА</th><th>№ ПРИКАЗА</th><th>STATUS</th><th>ТИКЕР</th><th>ОБЪЁМ</th><th>ЦЕНА</th><th>КЛИЕНТ</th><th>SALES</th><th>ИСТОЧНИК</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="side-buy">BUY</td>
+                    <td>C2C-1042</td>
+                    <td><span class="status kyc">Awaiting KYC</span></td>
+                    <td>ALPHA <span class="footnote" title="Требуется KYC происхождения средств">KYC</span></td>
+                    <td>25 000</td>
+                    <td>98.00</td>
+                    <td>Клиент Б</td>
+                    <td>Петрова</td>
+                    <td>из интереса #I-881</td>
+                  </tr>
+                  <tr>
+                    <td class="side-sell">SELL</td>
+                    <td>C2C-1043</td>
+                    <td><span class="status wait">Client confirm</span></td>
+                    <td>ALPHA</td>
+                    <td>25 000</td>
+                    <td>98.00</td>
+                    <td>Клиент А</td>
+                    <td>Иванов</td>
+                    <td>из интереса #I-774</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="ui-annotate">
+          <strong>Приказы:</strong> условия тянутся из matched-интересов (актив, сторона, цена, объём, клиент). Блокировки и исполнение — только на этом этапе.
+        </div>
+      </div>
+    </section>
+
+    <!-- 7 client -->
+    <section class="panel" id="p6">
+      <div class="panel-head">
+        <div class="kicker">Клиентский контур</div>
+        <h2>ATON Line: путь покупателя после выставления приказа</h2>
+        <p class="lead">Продавцу путь короче. Ниже — полный путь покупателя нового для него фонда (меморандумы → анкета проф. инвестора → поручение).</p>
+      </div>
+
+      <div class="phones">
+        <div class="phone">
+          <div class="phone-bar"></div>
+          <div class="phone-step">Шаг 1</div>
+          <h4>Чат с трейдером</h4>
+          <p>Приходит торговое поручение C2C с параметрами менеджера.</p>
+          <div class="box-el">Fund Alpha · Buy 25k @ $98</div>
+        </div>
+        <div class="phone">
+          <div class="phone-bar"></div>
+          <div class="phone-step">Шаг 2</div>
+          <h4>Меморандумы</h4>
+          <p>Клиент читает документы фонда и подтверждает ознакомление.</p>
+          <div class="check"><span>☐</span><span>Ознакомлен с меморандумами по Fund Alpha</span></div>
+        </div>
+        <div class="phone">
+          <div class="phone-bar"></div>
+          <div class="phone-step">Шаг 3</div>
+          <h4>Анкета проф. инвестора</h4>
+          <p>Указывает, где и сколько денежных средств в USD (Mauritius law).</p>
+          <div class="box-el">Bank A — $1.2m<br>Broker B — $0.4m</div>
+        </div>
+        <div class="phone">
+          <div class="phone-bar"></div>
+          <div class="phone-step">Шаг 4</div>
+          <h4>Поручение</h4>
+          <p>Читает параметры приказа и подписывает торговое поручение.</p>
+          <div class="fake-btn">Подтвердить поручение</div>
+        </div>
+      </div>
+
+      <div style="height:16px"></div>
+      <div class="grid2">
+        <div class="card">
+          <h3>На этапе интереса (до витрины)</h3>
+          <p>Push с параметрами интереса → ознакомление с меморандумами (где применимо) → SMS-подпись. Активы ещё не блокируются.</p>
+        </div>
+        <div class="card">
+          <h3>Параллельно менеджеру (если KYC)</h3>
+          <p>После matching менеджер покупателя собирает пакет документов / пишет администратору фонда. Статус приказа: <span class="status kyc">Awaiting KYC</span> до закрытия требования.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8 roles -->
+    <section class="panel" id="p7">
+      <div class="panel-head">
+        <div class="kicker">Управление и контролы</div>
+        <h2>Кто что контролирует — сводка для трёх функций</h2>
+        <p class="lead">Короткий checklist того, что нужно зафиксировать в решении на комитете / рабочем совещании.</p>
+      </div>
+
+      <div class="card" style="max-width:1100px;margin-bottom:16px">
+        <table class="matrix">
+          <thead>
+            <tr>
+              <th>Функция</th>
+              <th>Зона ответственности</th>
+              <th>Контрольная точка в процессе</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Trading / PCD</td>
+              <td>Витрина, matching, ценовой коридор, исполнение C2C-приказов</td>
+              <td>Approve интересов вне ±20%; снятие/установка HOLD совместно с продуктом</td>
+            </tr>
+            <tr>
+              <td>CIB / Alt.Invest</td>
+              <td>Индикативы по «редкому» NAV; сигнал о существенном изменении цены</td>
+              <td>Уведомление Compliance → HOLD по фонду</td>
+            </tr>
+            <tr>
+              <td>Compliance</td>
+              <td>Рамка fair pricing, KYC, санкции, документы фонда</td>
+              <td>Политика ±20%; KYC-матрица по фондам; HOLD-процедура</td>
+            </tr>
+            <tr>
+              <td>Sales / менеджер</td>
+              <td>Заведение интересов и приказов, работа с клиентом в ATON Line</td>
+              <td>Не обходит PCD/KYC; видит сноски до выставления покупки</td>
+            </tr>
+            <tr>
+              <td>Клиент</td>
+              <td>Подтверждение интереса и поручения в ATON Line</td>
+              <td>Меморандумы, анкета проф. инвестора, SMS / галочки</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="alert"><strong>Решения к фиксации:</strong> (1) матрица фондов: NAV-корзина + KYC-тип; (2) кто снимает HOLD; (3) обязательность объёмного matching vs цена-only; (4) срок жизни интереса по умолчанию.</div>
+
+      <div class="grid3">
+        <div class="card">
+          <h3>Уже согласовано</h3>
+          <ul>
+            <li>±20% от NAV или индикатива</li>
+            <li>Вне коридора — только PCD</li>
+            <li>Существенное изменение цены → HOLD + алерт Compliance</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Продуктовая логика</h3>
+          <ul>
+            <li>Интерес без блокировок</li>
+            <li>После match — приказы C2C с предзаполнением</li>
+            <li>KYC-сноска в UI и email менеджеру</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Следующий шаг</h3>
+          <ul>
+            <li>Согласовать матрицу фондов</li>
+            <li>Описать статусы в бэклоге ПСМ/Trading UI</li>
+            <li>Прототип формы интереса в бою</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  const panels = [...document.querySelectorAll('.panel')];
+  const navBtns = [...document.querySelectorAll('.nav-btn')];
+
+  function go(i) {
+    panels.forEach((p, idx) => p.classList.toggle('active', idx === i));
+    navBtns.forEach((b, idx) => b.classList.toggle('active', idx === i));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  navBtns.forEach(b => b.addEventListener('click', () => go(+b.dataset.panel)));
+
+  const flowDetails = [
+    {
+      t: '1. Создание интереса',
+      p: 'Менеджер в разделе «Интересы» заполняет 6 параметров. Это ещё не торговое поручение: бумаги и деньги не блокируются.',
+      chips: ['1. Актив (название + ISIN)', '2. Номер счёта', '3. Покупка / Продажа', '4. Объём', '5. Цена', '6. Срок: без даты / до даты / до смены NAV·индикатива']
+    },
+    {
+      t: '2. Проверка ценового коридора ±20%',
+      p: 'Система определяет корзину фонда (NAV часто / редко) и сравнивает цену с NAV либо с индикативом CIB/Alt.Invest. Вне коридора интерес не уходит клиенту без PCD.',
+      chips: ['Корзина A: ±20% от NAV', 'Корзина B: ±20% от индикатива', 'Вне коридора → pre-check PCD']
+    },
+    {
+      t: '3. Клиент в ATON Line',
+      p: 'После прохождения ценовой ветки клиент получает push. При необходимости знакомится с меморандумами и подтверждает интерес SMS-паролем.',
+      chips: ['Push в ATON Line', 'Меморандумы', 'SMS-подпись', 'Интерес «живой»']
+    },
+    {
+      t: '4. Витрина для всех менеджеров',
+      p: 'Все менеджеры АТОН видят интересы: актив, цена, объём, сторона, срок, sales. Можно обсуждать и двигать цену в интересах, чтобы сойтись.',
+      chips: ['Прозрачность внутри АТОН', 'Без блокировок активов', 'Договоры по цене/объёму']
+    },
+    {
+      t: '5. Matching',
+      p: 'При схождении цены (и желательно объёма) оба менеджера получают уведомление. Если фонд требует KYC — отдельный email и сноска до создания покупки.',
+      chips: ['Алерт двум sales', 'KYC email при необходимости', 'Переход в Приказы C2C']
+    },
+    {
+      t: '6. Реальные приказы клиент–клиент',
+      p: 'Параметры подтягиваются из интересов. Клиент проходит (для покупки нового фонда) меморандумы, анкету проф. инвестора и подтверждает поручение. Затем — исполнение.',
+      chips: ['Предзаполнение', 'Блокировки здесь', 'Анкета / KYC', 'Исполнение C2C']
+    }
+  ];
+
+  const flowSteps = [...document.querySelectorAll('.flow-step')];
+  const flowDetail = document.getElementById('flowDetail');
+  flowSteps.forEach(s => s.addEventListener('click', () => {
+    const i = +s.dataset.f;
+    flowSteps.forEach(x => x.classList.toggle('on', x === s));
+    const d = flowDetails[i];
+    flowDetail.innerHTML = `<h3>${d.t}</h3><p>${d.p}</p><div class="chips">${d.chips.map(c => `<span class="chip">${c}</span>`).join('')}</div>`;
+  }));
+
+  /* UI table data */
+  const baseRows = [
+    { side: 'SELL', status: 'live', statusText: 'Live', ticker: 'ALPHA', isin: 'LU000AA', vol: '25 000', price: '98.00', ref: 'NAV 100 (±20%)', term: 'до 30.09', client: 'Клиент А', sales: 'Иванов', flags: '' },
+    { side: 'BUY', status: 'live', statusText: 'Live', ticker: 'ALPHA', isin: 'LU000AA', vol: '20 000', price: '97.50', ref: 'NAV 100 (±20%)', term: 'без даты', client: 'Клиент Б', sales: 'Петрова', flags: '<span class="footnote" title="Покупка: потребуются меморандумы и возможно KYC">MEMO</span>' },
+    { side: 'BUY', status: 'wait', statusText: 'PCD review', ticker: 'BETA', isin: 'MU000BB', vol: '10 000', price: '72.00', ref: 'Ind. 100 (±20%)', term: 'до NAV change', client: 'Клиент В', sales: 'Сидоров', flags: '<span class="footnote">вне ±20%</span>' },
+    { side: 'SELL', status: 'match', statusText: 'Matched', ticker: 'ALPHA', isin: 'LU000AA', vol: '5 000', price: '98.00', ref: 'NAV 100', term: '—', client: 'Клиент Г', sales: 'Козлов', flags: '' }
+  ];
+  const holdRow = { side: 'BUY', status: 'hold', statusText: 'HOLD', ticker: 'GAMMA', isin: 'KY000CC', vol: '15 000', price: '—', ref: 'Ind. изменён', term: 'приостановлен', client: 'Клиент Д', sales: 'Орлова', flags: '<span class="footnote">алерт Compliance</span>' };
+
+  let showHold = false;
+  function renderTable(mode) {
+    const body = document.getElementById('uiBody');
+    if (mode === 'orders') {
+      body.innerHTML = `
+        <tr>
+          <td class="side-buy">BUY</td>
+          <td><span class="status kyc">Awaiting KYC</span></td>
+          <td>ALPHA / LU000AA</td>
+          <td>25 000</td>
+          <td>98.00</td>
+          <td>из интереса</td>
+          <td>—</td>
+          <td>Клиент Б</td>
+          <td>Петрова</td>
+          <td><span class="footnote">KYC docs</span></td>
+        </tr>
+        <tr>
+          <td class="side-sell">SELL</td>
+          <td><span class="status wait">Client confirm</span></td>
+          <td>ALPHA / LU000AA</td>
+          <td>25 000</td>
+          <td>98.00</td>
+          <td>из интереса</td>
+          <td>—</td>
+          <td>Клиент А</td>
+          <td>Иванов</td>
+          <td></td>
+        </tr>`;
+      return;
+    }
+    const rows = showHold ? [...baseRows, holdRow] : baseRows;
+    body.innerHTML = rows.map(r => `
+      <tr>
+        <td class="${r.side === 'BUY' ? 'side-buy' : 'side-sell'}">${r.side}</td>
+        <td><span class="status ${r.status}">${r.statusText}</span></td>
+        <td>${r.ticker}<div style="color:#999;font-size:10px">${r.isin}</div></td>
+        <td>${r.vol}</td>
+        <td>${r.price}</td>
+        <td>${r.ref}</td>
+        <td>${r.term}</td>
+        <td>${r.client}</td>
+        <td>${r.sales}</td>
+        <td>${r.flags}</td>
+      </tr>`).join('');
+  }
+  renderTable('interests');
+
+  document.getElementById('tabInterests').onclick = () => {
+    document.getElementById('tabInterests').classList.add('active');
+    document.getElementById('tabOrders').classList.remove('active');
+    document.getElementById('uiCrumb').innerHTML = 'Торговля <span>/</span> Интересы';
+    document.getElementById('btnCreate').textContent = '+ Создать интерес';
+    document.getElementById('uiAnnotate').innerHTML = '<strong>Интересы:</strong> несвязывающие намерения. Менеджеры АТОН видят витрину целиком, чтобы сводить стороны и торговаться по цене без блокировок активов.';
+    renderTable('interests');
+  };
+  document.getElementById('tabOrders').onclick = () => {
+    document.getElementById('tabOrders').classList.add('active');
+    document.getElementById('tabInterests').classList.remove('active');
+    document.getElementById('uiCrumb').innerHTML = 'Торговля <span>/</span> Приказы клиент–клиент';
+    document.getElementById('btnCreate').textContent = 'Создать поручение';
+    document.getElementById('uiAnnotate').innerHTML = '<strong>Приказы:</strong> реальные поручения после matching. Здесь появляются блокировки и полный клиентский контур подтверждения.';
+    renderTable('orders');
+  };
+  document.getElementById('toggleHoldDemo').onclick = () => {
+    showHold = !showHold;
+    document.getElementById('tabInterests').click();
+    document.getElementById('toggleHoldDemo').textContent = showHold ? 'Скрыть HOLD-пример' : 'Показать фонд на HOLD';
+  };
+  document.getElementById('gotoCreate').onclick = () => go(4);
+  document.getElementById('btnCreate').onclick = () => go(4);
+
+  /* price check */
+  const REF = 100;
+  function updatePrice() {
+    const price = parseFloat(document.getElementById('fPrice').value) || 0;
+    const asset = document.getElementById('fAsset').value;
+    const refName = asset === 'q' ? 'NAV' : 'индикатив CIB/Alt.Invest';
+    const pct = ((price - REF) / REF) * 100;
+    const ok = Math.abs(pct) <= 20;
+    const box = document.getElementById('priceBox');
+    box.className = 'price-check ' + (ok ? 'ok' : 'bad');
+    box.innerHTML = ok
+      ? `<strong>В коридоре ±20%.</strong> Цена $${price.toFixed(2)} vs ${refName} $${REF} (${pct >= 0 ? '+' : ''}${pct.toFixed(1)}%). После отправки — push клиенту в ATON Line.`
+      : `<strong>Вне коридора ±20%.</strong> Цена $${price.toFixed(2)} vs ${refName} $${REF} (${pct >= 0 ? '+' : ''}${pct.toFixed(1)}%). Требуется согласование руководителя PCD до отправки клиенту.`;
+    document.getElementById('pathOk').style.opacity = ok ? '1' : '.45';
+    document.getElementById('pathBad').style.opacity = ok ? '.45' : '1';
+    document.getElementById('pathOk').style.borderColor = ok ? 'var(--aton)' : 'var(--line)';
+    document.getElementById('pathBad').style.borderColor = ok ? 'var(--line)' : '#ed6c02';
+  }
+  document.getElementById('fPrice').addEventListener('input', updatePrice);
+  document.getElementById('fAsset').addEventListener('change', updatePrice);
+  document.getElementById('bumpPrice').onclick = () => {
+    document.getElementById('fPrice').value = 135;
+    updatePrice();
+  };
+  document.getElementById('submitInterest').onclick = () => {
+    const price = parseFloat(document.getElementById('fPrice').value) || 0;
+    const ok = Math.abs((price - REF) / REF * 100) <= 20;
+    alert(ok
+      ? 'Демо: интерес отправлен клиенту в ATON Line для подтверждения.'
+      : 'Демо: интерес отправлен на pre-check руководителю PCD.');
+  };
+  updatePrice();
+
+  document.addEventListener('keydown', e => {
+    const cur = navBtns.findIndex(b => b.classList.contains('active'));
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); go(Math.min(cur + 1, navBtns.length - 1)); }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); go(Math.max(cur - 1, 0)); }
+  });
+</script>
+</body>
+</html>
