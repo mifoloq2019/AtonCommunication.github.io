@@ -29,11 +29,11 @@
   .wrap {
     max-width: 1100px;
     margin: 0 auto;
-    padding: 32px 20px calc(64px + var(--safe-bottom));
+    padding: 24px 16px calc(56px + var(--safe-bottom));
   }
   header.hero {
-    margin-bottom: 28px;
-    padding: 28px 28px 24px;
+    margin-bottom: 20px;
+    padding: 22px 20px;
     background: linear-gradient(135deg, #1b4f72 0%, #2874a6 55%, #148f77 100%);
     color: #fff;
     border-radius: 16px;
@@ -41,7 +41,7 @@
   }
   header.hero h1 {
     margin: 0 0 8px;
-    font-size: clamp(1.35rem, 4.5vw, 1.75rem);
+    font-size: clamp(1.25rem, 4.5vw, 1.75rem);
     font-weight: 700;
     letter-spacing: -.02em;
     line-height: 1.25;
@@ -49,8 +49,8 @@
   header.hero p {
     margin: 0;
     opacity: .92;
+    font-size: clamp(.92rem, 3.4vw, 1.05rem);
     max-width: 60ch;
-    font-size: clamp(.9rem, 3.2vw, 1rem);
   }
   .tabs {
     display: flex;
@@ -118,9 +118,15 @@
     font-size: .85rem;
   }
   .meta b { color: var(--ink); font-weight: 650; }
-  .chart-wrap { position: relative; height: 280px; width: 100%; }
+  .chart-wrap {
+    position: relative;
+    height: clamp(240px, 52vw, 300px);
+    min-height: 240px;
+    width: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
   h2.section-title {
-    margin: 34px 0 12px;
+    margin: 28px 0 12px;
     font-size: clamp(1.15rem, 4vw, 1.35rem);
     scroll-margin-top: 16px;
   }
@@ -128,8 +134,6 @@
     width: 100%;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    margin: 0 -4px;
-    padding: 0 4px;
   }
   table {
     width: 100%;
@@ -150,8 +154,6 @@
     font-size: .82rem;
     text-transform: uppercase;
     letter-spacing: .04em;
-    position: sticky;
-    top: 0;
   }
   tr:last-child td { border-bottom: none; }
   td.num, th.num {
@@ -208,32 +210,56 @@
     font-size: .85rem;
   }
 
-  @media (max-width: 720px) {
-    .wrap { padding: 16px 14px calc(40px + var(--safe-bottom)); }
+  @media (max-width: 640px) {
+    .wrap { padding: 14px 10px calc(40px + var(--safe-bottom)); }
     header.hero {
-      margin-bottom: 18px;
-      padding: 20px 18px 18px;
-      border-radius: 14px;
+      padding: 18px 16px;
+      border-radius: 12px;
+      margin-bottom: 14px;
     }
-    .tabs { margin: 14px 0 12px; gap: 6px; }
-    .tabs a { padding: 9px 14px; font-size: .88rem; flex: 1 1 auto; justify-content: center; }
+    .tabs { margin: 12px 0 10px; gap: 6px; }
+    .tabs a {
+      padding: 10px 14px;
+      font-size: .9rem;
+      flex: 1 1 auto;
+      justify-content: center;
+    }
     .grid { gap: 14px; }
-    .card { padding: 14px 12px 8px; border-radius: 12px; }
+    .card {
+      padding: 14px 12px 8px;
+      border-radius: 12px;
+    }
     .card-head { flex-direction: column; gap: 8px; }
-    .meta { gap: 6px 12px; font-size: .8rem; }
-    .chart-wrap { height: 220px; }
-    h2.section-title { margin: 26px 0 10px; }
+    .card h2 { font-size: 1rem; gap: 6px; }
+    .freq {
+      font-size: .72rem;
+      padding: 2px 8px;
+      white-space: normal;
+    }
+    .meta {
+      gap: 8px 12px;
+      font-size: .8rem;
+      width: 100%;
+    }
+    .chart-wrap {
+      height: 260px;
+      min-height: 240px;
+      margin: 0 -2px;
+    }
+    h2.section-title { margin: 22px 0 10px; }
     .summary { gap: 8px; }
-    .pill { flex: 1 1 calc(50% - 8px); font-size: .82rem; padding: 8px 10px; }
+    .pill {
+      flex: 1 1 calc(50% - 8px);
+      font-size: .85rem;
+      padding: 8px 10px;
+    }
     .desktop-table { display: none; }
     .mobile-cards { display: block; }
-    table { min-width: 0; }
   }
 
-  @media (max-width: 420px) {
-    .chart-wrap { height: 200px; }
+  @media (max-width: 380px) {
+    .chart-wrap { height: 280px; }
     .pill { flex: 1 1 100%; }
-    .freq { white-space: normal; }
   }
 </style>
 </head>
@@ -241,8 +267,7 @@
   <div class="wrap">
     <header class="hero">
       <h1>Посещаемость вебинаров</h1>
-      <p>Графики по регулярным сериям и сводная таблица по нерегулярным мероприятиям.
-         Источник: «Список вебинаров.xlsx».</p>
+      <p>посещаемость вебинаров с 01.07.26 по 12.08.26</p>
     </header>
 
     <div class="tabs">
@@ -293,9 +318,9 @@
       <div class="card-head">
         <h2>Выступление Альтернативных Инвестиций <span class="freq">Раз в месяц</span></h2>
         <div class="meta">
-          <span><b>1</b> сессий</span>
-          <span>среднее <b>174</b></span>
-          <span>мин <b>174</b></span>
+          <span><b>2</b> сессий</span>
+          <span>среднее <b>150</b></span>
+          <span>мин <b>125</b></span>
           <span>макс <b>174</b></span>
         </div>
       </div>
@@ -343,7 +368,6 @@
     <section class="card">
       <div class="summary">
         <div class="pill">Всего мероприятий: <b>4</b></div>
-        <div class="pill">Сумма участников: <b>1189</b></div>
         <div class="pill">Среднее: <b>297</b></div>
       </div>
 
@@ -397,25 +421,32 @@
 <script>
 Chart.register(ChartDataLabels);
 
-const series = [{"name": "Утреннее собрание на деске", "points": [{"date": "06.07.2026", "iso": "2026-07-06", "count": 829}, {"date": "13.07.2026", "iso": "2026-07-13", "count": 764}, {"date": "20.07.2026", "iso": "2026-07-20", "count": 808}, {"date": "27.07.2026", "iso": "2026-07-27", "count": 839}, {"date": "03.08.2026", "iso": "2026-08-03", "count": 773}, {"date": "10.08.2026", "iso": "2026-08-10", "count": 788}], "frequency": "Еженедельно", "title": "Утреннее собрание на деске (Еженедельно)"}, {"name": "Трейдинг", "points": [{"date": "07.07.2026", "iso": "2026-07-07", "count": 580}, {"date": "14.07.2026", "iso": "2026-07-14", "count": 657}, {"date": "21.07.2026", "iso": "2026-07-21", "count": 600}, {"date": "28.07.2026", "iso": "2026-07-28", "count": 589}, {"date": "04.08.2026", "iso": "2026-08-04", "count": 556}, {"date": "11.08.2026", "iso": "2026-08-11", "count": 541}], "frequency": "Еженедельно", "title": "Трейдинг (Еженедельно)"}, {"name": "Регулярный звонок с командой FI Desk", "points": [{"date": "01.07.2026", "iso": "2026-07-01", "count": 263}, {"date": "15.07.2026", "iso": "2026-07-15", "count": 258}, {"date": "05.08.2026", "iso": "2026-08-05", "count": 244}], "frequency": "Раз в 2 недели", "title": "Регулярный звонок с командой FI Desk (Раз в 2 недели)"}, {"name": "Выступление Альтернативных Инвестиций", "points": [{"date": "08.07.2026", "iso": "2026-07-08", "count": 174}], "frequency": "Раз в месяц", "title": "Выступление Альтернативных Инвестиций (Раз в месяц)"}, {"name": "Регулярный звонок с командой CIB", "points": [{"date": "02.07.2026", "iso": "2026-07-02", "count": 388}, {"date": "16.07.2026", "iso": "2026-07-16", "count": 421}, {"date": "30.07.2026", "iso": "2026-07-30", "count": 440}], "frequency": "Раз в 2 недели", "title": "Регулярный звонок с командой CIB (Раз в 2 недели)"}, {"name": "Регулярная встреча со страховой компанией «АТОН Жизнь»", "points": [{"date": "09.07.2026", "iso": "2026-07-09", "count": 250}], "frequency": "Каждый 2-й четверг месяца", "title": "Регулярная встреча со страховой компанией «АТОН Жизнь» (Каждый 2-й четверг месяца)"}, {"name": "Встреча с Управляющей компанией", "points": [{"date": "03.07.2026", "iso": "2026-07-03", "count": 532}, {"date": "10.07.2026", "iso": "2026-07-10", "count": 531}, {"date": "17.07.2026", "iso": "2026-07-17", "count": 571}, {"date": "24.07.2026", "iso": "2026-07-24", "count": 509}, {"date": "31.07.2026", "iso": "2026-07-31", "count": 544}, {"date": "07.08.2026", "iso": "2026-08-07", "count": 520}], "frequency": "Еженедельно", "title": "Встреча с Управляющей компанией (Еженедельно)"}];
+const series = [{"name": "Утреннее собрание на деске", "points": [{"date": "06.07.2026", "iso": "2026-07-06", "count": 829}, {"date": "13.07.2026", "iso": "2026-07-13", "count": 764}, {"date": "20.07.2026", "iso": "2026-07-20", "count": 808}, {"date": "27.07.2026", "iso": "2026-07-27", "count": 839}, {"date": "03.08.2026", "iso": "2026-08-03", "count": 773}, {"date": "10.08.2026", "iso": "2026-08-10", "count": 788}], "frequency": "Еженедельно", "title": "Утреннее собрание на деске (Еженедельно)"}, {"name": "Трейдинг", "points": [{"date": "07.07.2026", "iso": "2026-07-07", "count": 580}, {"date": "14.07.2026", "iso": "2026-07-14", "count": 657}, {"date": "21.07.2026", "iso": "2026-07-21", "count": 600}, {"date": "28.07.2026", "iso": "2026-07-28", "count": 589}, {"date": "04.08.2026", "iso": "2026-08-04", "count": 556}, {"date": "11.08.2026", "iso": "2026-08-11", "count": 541}], "frequency": "Еженедельно", "title": "Трейдинг (Еженедельно)"}, {"name": "Регулярный звонок с командой FI Desk", "points": [{"date": "01.07.2026", "iso": "2026-07-01", "count": 263}, {"date": "15.07.2026", "iso": "2026-07-15", "count": 258}, {"date": "05.08.2026", "iso": "2026-08-05", "count": 244}], "frequency": "Раз в 2 недели", "title": "Регулярный звонок с командой FI Desk (Раз в 2 недели)"}, {"name": "Выступление Альтернативных Инвестиций", "points": [{"date": "08.07.2026", "iso": "2026-07-08", "count": 174}, {"date": "12.08.2026", "iso": "2026-08-12", "count": 125}], "frequency": "Раз в месяц", "title": "Выступление Альтернативных Инвестиций (Раз в месяц)"}, {"name": "Регулярный звонок с командой CIB", "points": [{"date": "02.07.2026", "iso": "2026-07-02", "count": 388}, {"date": "16.07.2026", "iso": "2026-07-16", "count": 421}, {"date": "30.07.2026", "iso": "2026-07-30", "count": 440}], "frequency": "Раз в 2 недели", "title": "Регулярный звонок с командой CIB (Раз в 2 недели)"}, {"name": "Регулярная встреча со страховой компанией «АТОН Жизнь»", "points": [{"date": "09.07.2026", "iso": "2026-07-09", "count": 250}], "frequency": "Каждый 2-й четверг месяца", "title": "Регулярная встреча со страховой компанией «АТОН Жизнь» (Каждый 2-й четверг месяца)"}, {"name": "Встреча с Управляющей компанией", "points": [{"date": "03.07.2026", "iso": "2026-07-03", "count": 532}, {"date": "10.07.2026", "iso": "2026-07-10", "count": 531}, {"date": "17.07.2026", "iso": "2026-07-17", "count": 571}, {"date": "24.07.2026", "iso": "2026-07-24", "count": 509}, {"date": "31.07.2026", "iso": "2026-07-31", "count": 544}, {"date": "07.08.2026", "iso": "2026-08-07", "count": 520}], "frequency": "Еженедельно", "title": "Встреча с Управляющей компанией (Еженедельно)"}];
 const colors = ["#1B4F72", "#117A65", "#B9770E", "#6C3483", "#922B21", "#1A5276", "#196F3D", "#7D3C98"];
 
 function isMobile() {
-  return window.matchMedia('(max-width: 720px)').matches;
+  return window.matchMedia('(max-width: 640px)').matches;
 }
 
 function shortLabel(date) {
-  // 06.07.2026 -> 06.07
   const parts = String(date).split('.');
   return parts.length >= 2 ? parts[0] + '.' + parts[1] : date;
 }
 
 function buildChartOptions(values, yMin, yMax, pad, mobile) {
+  const manyPoints = values.length >= 5;
   return {
     responsive: true,
     maintainAspectRatio: false,
-    layout: { padding: { top: mobile ? 14 : 18, right: mobile ? 4 : 8, left: 0 } },
-    interaction: { mode: 'index', intersect: false },
+    interaction: { mode: 'nearest', intersect: false },
+    layout: {
+      padding: {
+        top: mobile ? 22 : 18,
+        right: mobile ? 8 : 4,
+        left: 0,
+        bottom: mobile && manyPoints ? 8 : 0
+      }
+    },
     plugins: {
       legend: { display: false },
       tooltip: {
@@ -424,36 +455,39 @@ function buildChartOptions(values, yMin, yMax, pad, mobile) {
         }
       },
       datalabels: {
-        display: true,
         align: 'top',
         anchor: 'end',
         offset: mobile ? 2 : 4,
+        clamp: true,
+        clip: false,
         color: '#1c2833',
-        font: { weight: '600', size: mobile ? 10 : 12 },
-        formatter: (v) => v,
-        clamp: true
+        font: {
+          weight: '700',
+          size: mobile ? (manyPoints ? 11 : 12) : 12
+        },
+        formatter: (v) => v
       }
     },
     scales: {
       y: {
         beginAtZero: false,
-        suggestedMin: yMin - pad,
+        suggestedMin: Math.max(0, yMin - pad),
         suggestedMax: yMax + pad,
         grid: { color: '#e8eef2' },
         ticks: {
           precision: 0,
-          font: { size: mobile ? 10 : 12 },
-          maxTicksLimit: mobile ? 5 : 8
+          maxTicksLimit: mobile ? 5 : 6,
+          font: { size: mobile ? 11 : 12 }
         }
       },
       x: {
         grid: { display: false },
         ticks: {
-          font: { size: mobile ? 10 : 12 },
           maxRotation: mobile ? 45 : 0,
-          minRotation: mobile ? 45 : 0,
+          minRotation: mobile && manyPoints ? 35 : 0,
           autoSkip: true,
-          maxTicksLimit: mobile ? 6 : 12
+          maxTicksLimit: mobile ? 6 : 8,
+          font: { size: mobile ? 10 : 12 }
         }
       }
     }
@@ -469,8 +503,8 @@ series.forEach((s, i) => {
   const values = s.points.map(p => p.count);
   const yMin = Math.min(...values);
   const yMax = Math.max(...values);
-  const pad = Math.max(20, Math.round((yMax - yMin) * 0.18) || 30);
   const mobile = isMobile();
+  const pad = Math.max(mobile ? 28 : 20, Math.round((yMax - yMin) * 0.22) || 35);
   const chart = new Chart(ctx, {
     type: 'line',
     data: {
@@ -482,14 +516,14 @@ series.forEach((s, i) => {
         backgroundColor: color + '22',
         fill: true,
         tension: 0.25,
-        pointRadius: mobile ? 4 : 5,
-        pointHoverRadius: mobile ? 6 : 7,
-        borderWidth: mobile ? 2 : 2.5
+        pointRadius: mobile ? 6 : 5,
+        pointHoverRadius: mobile ? 8 : 7,
+        borderWidth: mobile ? 2.2 : 2.5
       }]
     },
     options: buildChartOptions(values, yMin, yMax, pad, mobile)
   });
-  charts.push({ chart, series: s, values, yMin, yMax, pad, color });
+  charts.push({ chart, series: s, values, yMin, yMax });
 });
 
 let lastMobile = isMobile();
@@ -497,11 +531,12 @@ window.addEventListener('resize', () => {
   const mobile = isMobile();
   if (mobile === lastMobile) return;
   lastMobile = mobile;
-  charts.forEach(({ chart, series: s, values, yMin, yMax, pad }) => {
+  charts.forEach(({ chart, series: s, values, yMin, yMax }) => {
+    const pad = Math.max(mobile ? 28 : 20, Math.round((yMax - yMin) * 0.22) || 35);
     chart.data.labels = s.points.map(p => mobile ? shortLabel(p.date) : p.date);
-    chart.data.datasets[0].pointRadius = mobile ? 4 : 5;
-    chart.data.datasets[0].pointHoverRadius = mobile ? 6 : 7;
-    chart.data.datasets[0].borderWidth = mobile ? 2 : 2.5;
+    chart.data.datasets[0].pointRadius = mobile ? 6 : 5;
+    chart.data.datasets[0].pointHoverRadius = mobile ? 8 : 7;
+    chart.data.datasets[0].borderWidth = mobile ? 2.2 : 2.5;
     chart.options = buildChartOptions(values, yMin, yMax, pad, mobile);
     chart.update();
   });
