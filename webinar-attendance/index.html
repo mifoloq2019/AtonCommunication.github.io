@@ -330,9 +330,9 @@
       <div class="card-head">
         <h2>Регулярный звонок с командой CIB <span class="freq">Раз в 2 недели</span></h2>
         <div class="meta">
-          <span><b>3</b> сессий</span>
-          <span>среднее <b>416</b></span>
-          <span>мин <b>388</b></span>
+          <span><b>4</b> сессий</span>
+          <span>среднее <b>404</b></span>
+          <span>мин <b>368</b></span>
           <span>макс <b>440</b></span>
         </div>
       </div>
@@ -342,13 +342,25 @@
       <div class="card-head">
         <h2>Регулярная встреча со страховой компанией «АТОН Жизнь» <span class="freq">Каждый 2-й четверг месяца</span></h2>
         <div class="meta">
-          <span><b>1</b> сессий</span>
-          <span>среднее <b>250</b></span>
-          <span>мин <b>250</b></span>
+          <span><b>2</b> сессий</span>
+          <span>среднее <b>228</b></span>
+          <span>мин <b>206</b></span>
           <span>макс <b>250</b></span>
         </div>
       </div>
       <div class="chart-wrap"><canvas id="chart_5"></canvas></div>
+    </section>
+    <section class="card">
+      <div class="card-head">
+        <h2>ACM Talks <span class="freq">Еженедельно</span></h2>
+        <div class="meta">
+          <span><b>7</b> сессий</span>
+          <span>среднее <b>235</b></span>
+          <span>мин <b>31</b></span>
+          <span>макс <b>305</b></span>
+        </div>
+      </div>
+      <div class="chart-wrap"><canvas id="chart_6"></canvas></div>
     </section>
     <section class="card">
       <div class="card-head">
@@ -360,7 +372,7 @@
           <span>макс <b>571</b></span>
         </div>
       </div>
-      <div class="chart-wrap"><canvas id="chart_6"></canvas></div>
+      <div class="chart-wrap"><canvas id="chart_7"></canvas></div>
     </section>
     </div>
 
@@ -420,9 +432,8 @@
 
 <script>
 Chart.register(ChartDataLabels);
-
-const series = [{"name": "Утреннее собрание на деске", "points": [{"date": "06.07.2026", "iso": "2026-07-06", "count": 829}, {"date": "13.07.2026", "iso": "2026-07-13", "count": 764}, {"date": "20.07.2026", "iso": "2026-07-20", "count": 808}, {"date": "27.07.2026", "iso": "2026-07-27", "count": 839}, {"date": "03.08.2026", "iso": "2026-08-03", "count": 773}, {"date": "10.08.2026", "iso": "2026-08-10", "count": 788}], "frequency": "Еженедельно", "title": "Утреннее собрание на деске (Еженедельно)"}, {"name": "Трейдинг", "points": [{"date": "07.07.2026", "iso": "2026-07-07", "count": 580}, {"date": "14.07.2026", "iso": "2026-07-14", "count": 657}, {"date": "21.07.2026", "iso": "2026-07-21", "count": 600}, {"date": "28.07.2026", "iso": "2026-07-28", "count": 589}, {"date": "04.08.2026", "iso": "2026-08-04", "count": 556}, {"date": "11.08.2026", "iso": "2026-08-11", "count": 541}], "frequency": "Еженедельно", "title": "Трейдинг (Еженедельно)"}, {"name": "Регулярный звонок с командой FI Desk", "points": [{"date": "01.07.2026", "iso": "2026-07-01", "count": 263}, {"date": "15.07.2026", "iso": "2026-07-15", "count": 258}, {"date": "05.08.2026", "iso": "2026-08-05", "count": 244}], "frequency": "Раз в 2 недели", "title": "Регулярный звонок с командой FI Desk (Раз в 2 недели)"}, {"name": "Выступление Альтернативных Инвестиций", "points": [{"date": "08.07.2026", "iso": "2026-07-08", "count": 174}, {"date": "12.08.2026", "iso": "2026-08-12", "count": 125}], "frequency": "Раз в месяц", "title": "Выступление Альтернативных Инвестиций (Раз в месяц)"}, {"name": "Регулярный звонок с командой CIB", "points": [{"date": "02.07.2026", "iso": "2026-07-02", "count": 388}, {"date": "16.07.2026", "iso": "2026-07-16", "count": 421}, {"date": "30.07.2026", "iso": "2026-07-30", "count": 440}], "frequency": "Раз в 2 недели", "title": "Регулярный звонок с командой CIB (Раз в 2 недели)"}, {"name": "Регулярная встреча со страховой компанией «АТОН Жизнь»", "points": [{"date": "09.07.2026", "iso": "2026-07-09", "count": 250}], "frequency": "Каждый 2-й четверг месяца", "title": "Регулярная встреча со страховой компанией «АТОН Жизнь» (Каждый 2-й четверг месяца)"}, {"name": "Встреча с Управляющей компанией", "points": [{"date": "03.07.2026", "iso": "2026-07-03", "count": 532}, {"date": "10.07.2026", "iso": "2026-07-10", "count": 531}, {"date": "17.07.2026", "iso": "2026-07-17", "count": 571}, {"date": "24.07.2026", "iso": "2026-07-24", "count": 509}, {"date": "31.07.2026", "iso": "2026-07-31", "count": 544}, {"date": "07.08.2026", "iso": "2026-08-07", "count": 520}], "frequency": "Еженедельно", "title": "Встреча с Управляющей компанией (Еженедельно)"}];
-const colors = ["#1B4F72", "#117A65", "#B9770E", "#6C3483", "#922B21", "#1A5276", "#196F3D", "#7D3C98"];
+const series = [{"name": "Утреннее собрание на деске", "points": [{"date": "06.07.2026", "iso": "2026-07-06", "count": 829}, {"date": "13.07.2026", "iso": "2026-07-13", "count": 764}, {"date": "20.07.2026", "iso": "2026-07-20", "count": 808}, {"date": "27.07.2026", "iso": "2026-07-27", "count": 839}, {"date": "03.08.2026", "iso": "2026-08-03", "count": 773}, {"date": "10.08.2026", "iso": "2026-08-10", "count": 788}], "borderColor": "#1B4F72", "backgroundColor": "rgba(27,79,114,0.13)"}, {"name": "Трейдинг", "points": [{"date": "07.07.2026", "iso": "2026-07-07", "count": 580}, {"date": "14.07.2026", "iso": "2026-07-14", "count": 657}, {"date": "21.07.2026", "iso": "2026-07-21", "count": 600}, {"date": "28.07.2026", "iso": "2026-07-28", "count": 589}, {"date": "04.08.2026", "iso": "2026-08-04", "count": 556}, {"date": "11.08.2026", "iso": "2026-08-11", "count": 541}], "borderColor": "#117A65", "backgroundColor": "rgba(17,122,101,0.13)"}, {"name": "Регулярный звонок с командой FI Desk", "points": [{"date": "01.07.2026", "iso": "2026-07-01", "count": 263}, {"date": "15.07.2026", "iso": "2026-07-15", "count": 258}, {"date": "05.08.2026", "iso": "2026-08-05", "count": 244}], "borderColor": "#B9770E", "backgroundColor": "rgba(185,119,14,0.13)"}, {"name": "Выступление Альтернативных Инвестиций", "points": [{"date": "08.07.2026", "iso": "2026-07-08", "count": 174}, {"date": "12.08.2026", "iso": "2026-08-12", "count": 125}], "borderColor": "#6C3483", "backgroundColor": "rgba(108,52,131,0.13)"}, {"name": "Регулярный звонок с командой CIB", "points": [{"date": "02.07.2026", "iso": "2026-07-02", "count": 388}, {"date": "16.07.2026", "iso": "2026-07-16", "count": 421}, {"date": "30.07.2026", "iso": "2026-07-30", "count": 440}, {"date": "13.08.2026", "iso": "2026-08-13", "count": 368}], "borderColor": "#922B21", "backgroundColor": "rgba(146,43,33,0.13)"}, {"name": "Регулярная встреча со страховой компанией «АТОН Жизнь»", "points": [{"date": "09.07.2026", "iso": "2026-07-09", "count": 250}, {"date": "13.08.2026", "iso": "2026-08-13", "count": 206}], "borderColor": "#1A5276", "backgroundColor": "rgba(26,82,118,0.13)"}, {"name": "ACM Talks", "points": [{"date": "02.07.2026", "iso": "2026-07-02", "count": 272}, {"date": "09.07.2026", "iso": "2026-07-09", "count": 31}, {"date": "16.07.2026", "iso": "2026-07-16", "count": 270}, {"date": "23.07.2026", "iso": "2026-07-23", "count": 266}, {"date": "30.07.2026", "iso": "2026-07-30", "count": 305}, {"date": "06.08.2026", "iso": "2026-08-06", "count": 271}, {"date": "13.08.2026", "iso": "2026-08-13", "count": 230}], "borderColor": "#196F3D", "backgroundColor": "rgba(25,111,61,0.13)"}, {"name": "Встреча с Управляющей компанией", "points": [{"date": "03.07.2026", "iso": "2026-07-03", "count": 532}, {"date": "10.07.2026", "iso": "2026-07-10", "count": 531}, {"date": "17.07.2026", "iso": "2026-07-17", "count": 571}, {"date": "24.07.2026", "iso": "2026-07-24", "count": 509}, {"date": "31.07.2026", "iso": "2026-07-31", "count": 544}, {"date": "07.08.2026", "iso": "2026-08-07", "count": 520}], "borderColor": "#7D3C98", "backgroundColor": "rgba(125,60,152,0.13)"}];
+const fallbackColors = ["#1B4F72", "#117A65", "#B9770E", "#6C3483", "#922B21", "#1A5276", "#196F3D", "#7D3C98"];
 
 function isMobile() {
   return window.matchMedia('(max-width: 640px)').matches;
@@ -499,7 +510,8 @@ const charts = [];
 series.forEach((s, i) => {
   const ctx = document.getElementById('chart_' + i);
   if (!ctx) return;
-  const color = colors[i % colors.length];
+  const color = s.borderColor || fallbackColors[i % fallbackColors.length];
+  const bg = s.backgroundColor || (color + '22');
   const values = s.points.map(p => p.count);
   const yMin = Math.min(...values);
   const yMax = Math.max(...values);
@@ -513,7 +525,7 @@ series.forEach((s, i) => {
         label: 'Участники',
         data: values,
         borderColor: color,
-        backgroundColor: color + '22',
+        backgroundColor: bg,
         fill: true,
         tension: 0.25,
         pointRadius: mobile ? 6 : 5,
