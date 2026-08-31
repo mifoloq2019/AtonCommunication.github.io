@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>Посещаемость встреч по командам</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { -webkit-text-size-adjust: 100%; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      color: #0f0f0f;
+      background: #fbf7ff;
+      line-height: 1.55;
+      padding: 16px;
+      padding-top: max(16px, env(safe-area-inset-top));
+      padding-bottom: max(16px, env(safe-area-inset-bottom));
+    }
+
+    .wrap { max-width: 1180px; margin: 0 auto; }
+
+    .hero {
+      background: linear-gradient(140deg, #0b0b0b 0%, #16082a 48%, #2a0a55 100%);
+      color: #fff;
+      border-radius: 20px;
+      padding: 28px 24px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(112, 0, 255, 0.35);
+    }
+
+    .hero h1 {
+      font-size: 24px;
+      line-height: 1.25;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.82);
+      margin-bottom: 10px;
+    }
+
+    .meetings-tag {
+      display: inline-block;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .kpi-grid {
+      margin-bottom: 20px;
+    }
+
+    .kpi {
+      background: #fff;
+      border: 1px solid #e4dcef;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 12px;
+    }
+
+    .kpi-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #5c5668;
+      margin-bottom: 8px;
+    }
+
+    .kpi-value {
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .kpi-value.ok { color: #0a7a55; }
+    .kpi-value.muted { color: #5c5668; }
+
+    .kpi-sub {
+      margin-top: 8px;
+      font-size: 14px;
+      color: #5c5668;
+    }
+
+    .highlights { margin-bottom: 20px; }
+
+    .highlight {
+      background: #fff;
+      border: 1px solid #e4dcef;
+      border-radius: 16px;
+      padding: 18px 20px;
+      margin-bottom: 12px;
+    }
+
+    .highlight.ok-border { border-left: 4px solid #0a7a55; }
+    .highlight.warn-border { border-left: 4px solid #8a4b00; }
+
+    .highlight h3 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .highlight li {
+      list-style: none;
+      display: block;
+      overflow: hidden;
+      padding: 6px 0;
+      font-size: 14px;
+      border-bottom: 1px solid #f0ebf8;
+    }
+
+    .highlight li:last-child { border-bottom: none; }
+
+    .highlight .name {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .highlight .pct {
+      font-weight: 700;
+    }
+
+    .highlight .pct.good { color: #0a7a55; }
+    .highlight .pct.bad { color: #8a4b00; }
+
+    .section {
+      background: #fff;
+      border: 1px solid #e4dcef;
+      border-radius: 20px;
+      padding: 20px 18px;
+      margin-bottom: 20px;
+    }
+
+    .section h2 {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      min-width: 520px;
+    }
+
+    thead th {
+      text-align: left;
+      padding: 10px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #5c5668;
+      border-bottom: 2px solid #e4dcef;
+      white-space: nowrap;
+    }
+
+    thead th.num { text-align: right; }
+
+    tbody td {
+      padding: 12px;
+      border-bottom: 1px solid #e4dcef;
+      vertical-align: middle;
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+
+    .dept-name {
+      font-weight: 600;
+      min-width: 160px;
+      word-wrap: break-word;
+    }
+
+    .num {
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .pct-high { color: #0a7a55; font-weight: 700; }
+    .pct-mid { color: #7000ff; font-weight: 700; }
+    .pct-low { color: #8a4b00; font-weight: 700; }
+
+    .progress-bar {
+      height: 10px;
+      background: #d8d2e4;
+      border-radius: 999px;
+      overflow: hidden;
+      min-width: 80px;
+    }
+
+    .progress-fill {
+      height: 10px;
+      background: #7000ff;
+      border-radius: 999px;
+    }
+
+    @media (min-width: 640px) {
+      body { padding: 32px 24px; }
+      .kpi-grid {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+        border-spacing: 12px 0;
+        margin-left: -6px;
+        width: calc(100% + 12px);
+      }
+      .kpi {
+        display: table-cell;
+        margin-bottom: 0;
+      }
+      .highlights {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+        border-spacing: 12px 0;
+        margin-left: -6px;
+        width: calc(100% + 12px);
+      }
+      .highlight {
+        display: table-cell;
+        margin-bottom: 0;
+        vertical-align: top;
+      }
+      .highlight li {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: baseline;
+      }
+      .highlight .name {
+        display: inline;
+        margin-bottom: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <h1>Посещаемость встреч по командам</h1>
+      <p>Сводка по участию сотрудников: кто посетил встречи и кто отсутствовал.</p>
+      <span class="meetings-tag">ЮЛ: открытие счёта · РЕПО с ЦК · налоги</span>
+    </header>
+
+    <div class="kpi-grid">
+      <div class="kpi">
+        <div class="kpi-label">Всего сотрудников</div>
+        <div class="kpi-value">781</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Посетили встречи</div>
+        <div class="kpi-value ok">397</div>
+        <div class="kpi-sub">51% от общего числа</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Не посетили</div>
+        <div class="kpi-value muted">384</div>
+        <div class="kpi-sub">49% от общего числа</div>
+      </div>
+    </div>
+
+    <div class="highlights">
+      <div class="highlight ok-border">
+        <h3>Лучшая посещаемость</h3>
+        <ul>
+          <li><span class="name">Амбарцума Погосяна</span> <span class="pct good">85,7%</span></li>
+          <li><span class="name">Ольги Полурядниковой</span> <span class="pct good">74,1%</span></li>
+          <li><span class="name">Антона Бирюкова</span> <span class="pct good">73,8%</span></li>
+        </ul>
+      </div>
+      <div class="highlight warn-border">
+        <h3>Нужно внимание</h3>
+        <ul>
+          <li><span class="name">Павла Лепешова</span> <span class="pct bad">25,4%</span></li>
+          <li><span class="name">Эраджа Сафарова</span> <span class="pct bad">38,8%</span></li>
+          <li><span class="name">Константина Чиркова</span> <span class="pct bad">40,9%</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <section class="section">
+      <h2>Посещаемость</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Департамент</th>
+              <th class="num">Всего</th>
+              <th class="num">Посетили</th>
+              <th class="num">Не посетили</th>
+              <th class="num">%</th>
+              <th>Доля</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="dept-name">Амбарцума Погосяна</td>
+              <td class="num">7</td>
+              <td class="num">6</td>
+              <td class="num">1</td>
+              <td class="num pct-high">85,7%</td>
+              <td><div class="progress-bar"><div class="progress-fill" style="width:85.7%;"></div></div></td>
+            </tr>
+            <tr>
+              <td class="dept-name">Ольги Полурядниковой</td>
+              <td class="num">27</td>
+              <td class="num">20</td>
+              <td class="num">7</td>
+              <td class="num pct-high">74,1%</td>
+              <td><div class="progress-bar"><div class="progress-fill" style="width:74.1%;"></div></div></td>
+            </tr>
+            <tr>
+              <td class="dept-name">Антона Бирюкова</td>
+              <td class="num">80</td>
+              <td class="num">59</td>
+              <td class="num">21</td>
+              <td class="num pct-high">73,8%</td>
+              <td><div class="progress-bar"><div class="progress-fill" style="width:73.8%;"></div></div></td>
+            </tr>
+            <tr>
+              <td class="dept-name">Управление по работе с клиентами</td>
+              <td class="num">124</td>
+              <td class="num">74</td>
+              <td class="num">50</td>
+              <td class="num pct-mid">59,7%</td>
+              <td><div class="progress-bar"><div class="progress-fill" style="width:59.7%;"></div></div></td>
+            </tr>
+            <tr>
+              <td class="dept-name">Андрея Гребенкина</td>
+              <td class="num">39</td>
+              <td class="num">23</td>
+              <td class="num">16</td>
+              <td class="num pct-mid">59%</td>
+              <td><div class="progress-bar"><div class="progress-fill" style="width:59%;"></div></div></td>
+            </tr>
+            <tr>
+              <td class="dept-name">Евгения Валуйских</td>
+              <td class="num">64</td>
+              <td class="num">37</td>
+              <td class="num">27</td>
+              <td class="num pct-mid">57,8%</td>
+              <td><div class="progress-bar"><div class="progress-fill" style="width:57.8%;"></div></div></td>
+            </tr>
+            <tr>
+              <td class="dept-name">Максима Худина</td>
+              <td class="num">39</td>
+              <td class="num">19</td>
+              <td class="num">20</td>
+              <td class="num pct-mid">48,7%</td>
+              <td><div class="progress-bar"><div class="progress-fill" style="width:48.7%;"></div></div></td>
+            </tr>
+            <tr>
+              <td class="dept-name">Ольги Гашковой</td>
+              <td class="num">53</td>
+              <td class="num">25</td>
+              <td class="num">28</td>
+              <td class="num pct-mid">47,2%</td>
+              <td><div class="progress-bar"><div class="progress-fill" style="width:47.2%;"></div></div></td>
+            </tr>
+            <tr>
+              <td class="dept-name">Артура Антоняна</td>
+              <td class="num">73</td>
+              <td class="num">33</td>
+              <td class="num">40</td>
+              <td class="num pct-mid">45,2%</td>
+              <td><div class="progress-bar"><div class="progress-fill" style="width:45.2%;"></div></div></td>
+            </tr>
+            <tr>
+              <td class="dept-name">Евгения Черчовича</td>
+              <td class="num">52</td>
+              <td class="num">22</td>
+              <td class="num">30</td>
+              <td class="num pct-low">42,3%</td>
+              <td><div class="progress-bar"><div class="progress-fill" style="width:42.3%;"></div></div></td>
+            </tr>
+            <tr>
+              <td class="dept-name">Константина Чиркова</td>
+              <td class="num">44</td>
+              <td class="num">18</td>
+              <td class="num">26</td>
+              <td class="num pct-low">40,9%</td>
+              <td><div class="progress-bar"><div class="progress-fill" style="width:40.9%;"></div></div></td>
+            </tr>
+            <tr>
+              <td class="dept-name">Эраджа Сафарова</td>
+              <td class="num">116</td>
+              <td class="num">45</td>
+              <td class="num">71</td>
+              <td class="num pct-low">38,8%</td>
+              <td><div class="progress-bar"><div class="progress-fill" style="width:38.8%;"></div></div></td>
+            </tr>
+            <tr>
+              <td class="dept-name">Павла Лепешова</td>
+              <td class="num">63</td>
+              <td class="num">16</td>
+              <td class="num">47</td>
+              <td class="num pct-low">25,4%</td>
+              <td><div class="progress-bar"><div class="progress-fill" style="width:25.4%;"></div></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
