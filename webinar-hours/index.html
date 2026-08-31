@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="format-detection" content="telephone=no" />
+  <title>Время на вебинары</title>
+  <style>
+    :root {
+      --ink: #0f0f0f;
+      --muted: #5c5668;
+      --line: #e4dcef;
+      --bg: #fbf7ff;
+      --card: #ffffff;
+      --accent: #7000ff;
+      --accent-soft: #efe5ff;
+      --accent-light: #9ca3ff;
+      --black: #0b0b0b;
+      --ok: #0a7a55;
+      --warn: #8a4b00;
+      --shadow: 0 12px 32px rgba(11, 11, 11, 0.08);
+      --radius: 18px;
+      --min: var(--warn);
+      --avg: var(--accent);
+      --max: var(--ok);
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(1100px 480px at 8% -8%, rgba(112, 0, 255, 0.14) 0%, transparent 55%),
+        radial-gradient(800px 420px at 100% 0%, rgba(156, 163, 255, 0.22) 0%, transparent 48%),
+        var(--bg);
+      line-height: 1.55;
+      padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    }
+
+    .wrap {
+      width: min(1180px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 40px 0 72px;
+    }
+
+    .hero {
+      background:
+        radial-gradient(700px 280px at 90% 10%, rgba(112, 0, 255, 0.55) 0%, transparent 55%),
+        linear-gradient(140deg, #0b0b0b 0%, #16082a 48%, #2a0a55 100%);
+      color: #fff;
+      border-radius: 28px;
+      padding: 40px 40px 36px;
+      box-shadow: 0 18px 40px rgba(11, 11, 11, 0.28);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(112, 0, 255, 0.35);
+      margin-bottom: 24px;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -50px;
+      bottom: -70px;
+      width: 240px;
+      height: 240px;
+      border-radius: 50%;
+      background: rgba(112, 0, 255, 0.35);
+      filter: blur(6px);
+    }
+
+    .hero h1 {
+      margin: 0 0 12px;
+      font-size: clamp(22px, 3.4vw, 36px);
+      line-height: 1.25;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero p {
+      margin: 0 0 10px;
+      max-width: 60ch;
+      font-size: 17px;
+      color: rgba(255, 255, 255, 0.82);
+      position: relative;
+      z-index: 1;
+    }
+
+    .meetings-tag {
+      display: inline-block;
+      margin-top: 4px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      font-size: 14px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.92);
+      position: relative;
+      z-index: 1;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .kpi-grid.compact {
+      margin-top: 4px;
+      margin-bottom: 14px;
+    }
+
+    .kpi-grid.pct .kpi-value.accent { color: #0a5c45; }
+    .kpi-grid.pct .kpi {
+      border-color: rgba(10, 92, 69, 0.18);
+    }
+
+    .kpi {
+      background: var(--card);
+      border: 1px solid rgba(228, 220, 239, 0.95);
+      border-radius: var(--radius);
+      padding: 24px 26px;
+      box-shadow: var(--shadow);
+    }
+
+    .kpi-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .kpi-value {
+      font-size: clamp(32px, 4vw, 42px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+
+    .kpi-value.ok { color: var(--ok); }
+    .kpi-value.warn { color: var(--warn); }
+    .kpi-value.accent { color: var(--accent); }
+
+    .kpi-sub {
+      margin-top: 8px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .section {
+      background: var(--card);
+      border: 1px solid rgba(228, 220, 239, 0.95);
+      border-radius: 24px;
+      padding: 26px 28px 28px;
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+    }
+
+    .section-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .section h2 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .section-desc {
+      margin: 0;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .chart-caption {
+      display: inline-flex;
+      align-items: center;
+      margin: 0 0 10px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: var(--accent-soft);
+      border: 1px solid rgba(112, 0, 255, 0.18);
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .chart-caption.pct {
+      background: rgba(10, 92, 69, 0.1);
+      border-color: rgba(10, 92, 69, 0.22);
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      margin: 0 0 14px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .legend-dot.bar {
+      width: 14px;
+      height: 4px;
+      border-radius: 2px;
+    }
+
+    .chart-wrap {
+      position: relative;
+      width: 100%;
+      height: clamp(300px, 52vw, 420px);
+      min-height: 300px;
+      overflow: hidden;
+    }
+
+    .chart-svg { display: block; width: 100%; height: 100%; max-width: 100%; }
+    .chart-empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: var(--muted);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    thead th {
+      text-align: left;
+      padding: 12px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 2px solid var(--line);
+      white-space: nowrap;
+    }
+
+    thead th.num-cell { text-align: right; }
+
+    tbody td {
+      padding: 14px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: middle;
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+
+    .dept-name {
+      font-weight: 600;
+      min-width: 110px;
+    }
+
+    .num-cell {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    td.min { color: var(--min); }
+    td.avg { color: var(--avg); }
+    td.max { color: var(--max); }
+
+    .hint {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 500;
+      margin-top: 2px;
+    }
+
+    table.table-cats {
+      min-width: 0;
+      table-layout: fixed;
+      font-size: 13px;
+    }
+
+    table.table-cats th,
+    table.table-cats td {
+      padding: 10px 6px;
+      text-align: center;
+      white-space: normal;
+    }
+
+    table.table-cats th.month-col,
+    table.table-cats td.month-col {
+      width: 18%;
+      text-align: left;
+    }
+
+    table.table-cats th.cat-col,
+    table.table-cats td.cat-col {
+      width: 14%;
+      text-align: center;
+    }
+
+    table.table-cats th.total-col,
+    table.table-cats td.total-col {
+      width: 12%;
+      text-align: center;
+    }
+
+    table.table-cats th.cat-col {
+      line-height: 1.15;
+      vertical-align: bottom;
+      padding-bottom: 10px;
+      text-transform: none;
+      letter-spacing: 0;
+      white-space: normal;
+    }
+
+    table.table-cats th.cat-col .swatch {
+      display: block;
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      margin: 0 auto 6px;
+    }
+
+    .cat-title {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      width: 100%;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    .cat-title span { display: block; text-align: center; }
+
+    table.table-cats td.num-cell,
+    table.table-cats th.num-cell {
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    footer {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .cat-explain {
+      display: grid;
+      gap: 12px;
+      margin: 0 0 16px;
+    }
+
+    .cat-explain-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(251, 247, 255, 0.7);
+      border: 1px solid rgba(228, 220, 239, 0.85);
+    }
+
+    .cat-explain-item .legend-dot {
+      margin-top: 4px;
+    }
+
+    .cat-explain-item strong {
+      display: block;
+      font-size: 14px;
+      font-weight: 750;
+      margin-bottom: 4px;
+    }
+
+    .cat-explain-item p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.45;
+      font-weight: 500;
+    }
+
+    .cat-explain-hint {
+      color: #8a8299;
+      font-weight: 500;
+    }
+
+    details.more {
+      margin-top: 16px;
+    }
+
+    details.more > summary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      list-style: none;
+      cursor: pointer;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      border: 1px solid rgba(112, 0, 255, 0.22);
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    details.more > summary::-webkit-details-marker { display: none; }
+    details.more > summary::marker { content: ""; }
+
+    details.more > summary::after {
+      content: "▾";
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    details.more[open] > summary::after { content: "▴"; }
+
+    details.more .cat-explain {
+      margin-top: 16px;
+      margin-bottom: 4px;
+    }
+
+    details.more .table-wrap {
+      margin-top: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .kpi-grid { grid-template-columns: 1fr; }
+      .hero { padding: 28px 24px; }
+      .section { padding: 20px 18px; }
+      .wrap { padding: 24px 0 56px; }
+      .chart-wrap { height: 280px; min-height: 280px; }
+      table.table-cats { font-size: 12px; }
+      .cat-title { font-size: 10px; }
+      table.table-cats th,
+      table.table-cats td { padding: 8px 4px; }
+    }
+
+    @media print {
+      body { background: #fff; }
+      .section, .kpi, .hero {
+        box-shadow: none;
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <h1>Время менеджеров на вебинары</h1>
+      <p>Средняя недельная нагрузка при просмотре всех вебинаров.</p>
+      <span class="meetings-tag">12.01.26 — 28.08.26</span>
+    </header>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>В % от общего рабочего времени</h2>
+        </div>
+      </div>
+      <div class="kpi-grid compact pct">
+        <div class="kpi">
+          <div class="kpi-label">Среднее в неделю</div>
+          <div class="kpi-value accent">12.0%</div>
+          <div class="kpi-sub">от рабочего времени</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Пиковая неделя</div>
+          <div class="kpi-value ok">18.3%</div>
+          <div class="kpi-sub">15.06–21.06</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Минимальная неделя</div>
+          <div class="kpi-value warn">9.0%</div>
+          <div class="kpi-sub">16.03–22.03</div>
+        </div>
+      </div>
+      <div class="chart-wrap"><svg class="chart-svg" viewBox="0 0 960 410" width="100%" height="100%" role="img" aria-label="Доля от рабочего времени по неделям" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="960" height="410" fill="#ffffff"/>
+<line x1="52" y1="202.6" x2="944" y2="202.6" stroke="#e4dcef" stroke-width="1"/>
+<text x="44" y="206.6" text-anchor="end" font-size="11" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">10%</text>
+<line x1="52" y1="119.6" x2="944" y2="119.6" stroke="#e4dcef" stroke-width="1"/>
+<text x="44" y="123.6" text-anchor="end" font-size="11" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">15%</text>
+<line x1="52" y1="36.7" x2="944" y2="36.7" stroke="#e4dcef" stroke-width="1"/>
+<text x="44" y="40.7" text-anchor="end" font-size="11" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">20%</text>
+<line x1="52" y1="358.0" x2="944" y2="358.0" stroke="#e4dcef" stroke-width="1"/>
+<rect x="45.9" y="323.6" width="12.2" height="34.4" rx="3" fill="rgba(10,92,69,0.35)"/>
+<text x="52.0" y="319.6" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c45" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">5</text>
+<rect x="73.8" y="302.9" width="12.2" height="55.1" rx="3" fill="rgba(10,92,69,0.35)"/>
+<text x="79.9" y="298.9" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c45" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">8</text>
+<rect x="101.7" y="316.7" width="12.2" height="41.3" rx="3" fill="rgba(10,92,69,0.35)"/>
+<text x="107.8" y="312.7" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c45" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6</text>
+<rect x="129.5" y="316.7" width="12.2" height="41.3" rx="3" fill="rgba(10,92,69,0.35)"/>
+<text x="135.6" y="312.7" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c45" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6</text>
+<rect x="157.4" y="309.8" width="12.2" height="48.2" rx="3" fill="rgba(10,92,69,0.35)"/>
+<text x="163.5" y="305.8" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c45" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">7</text>
+<rect x="185.3" y="316.7" width="12.2" height="41.3" rx="3" fill="rgba(10,92,69,0.35)"/>
+<text x="191.4" y="312.7" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c45" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6</text>
+<rect x="213.2" y="323.6" width="12.2" height="34.4" rx="3" fill="rgba(10,92,69,0.35)"/>
+<text x="219.2" y="319.6" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c45" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">5</text>
+<rect x="241.0" y="316.7" width="12.2" height="41.3" rx="3" fill="rgba(10,92,69,0.35)"/>
+<text x="247.1" y="312.7" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c45" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6</text>
+<rect x="268.9" y="316.7" width="12.2" height="41.3" rx="3" fill="rgba(10,92,69,0.35)"/>
+<text x="275.0" y="312.7" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c45" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6</text>
+<rect x="296.8" y="323.6" width="12.2" height="34.4" rx="3" fill="rgba(10,92,69,0.35)"/>
+<text x="302.9" y="319.6" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c45" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">5</text>
+<rect x="324.7" y="316.7" width="12.2" height="41.3" rx="3" fill="rgba(10,92,69,0.35)"/>
+<text x="330.8" y="312.7" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c45" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6</text>
+<rect x="352.5" y="316.7" width="12.2" height="41.3" rx="3" fill="rgba(10,92,69,0.35)"/>
+<text x="358.6" y="312.7" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c45" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6</text>
+<rect x="380.4" y="316.7" width="12.2" height="41.3" rx="3" fill="rgba(10,92,69,0.35)"/>
+<text x="386.5" y="312.7" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c45" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6</text>
+<rect x="408.3" y="316.7" width="12.2" height="41.3" rx="3" fill="rgba(10,92,69,0.35)"/>
+<text x="414.4" y="312.7" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c45" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6</text>
+<rect x="436.2" y="323.6" width="12.2" height="34.4" rx="3" fill="rgba(10,92,69,0.35)"/>
+<text x="442.2" y="319.6" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c45" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">5</text>
+<rect x="464.0" y="316.7" width="12.2" height="41.3" rx="3" fill="rgba(10,92,69,0.35)"/>
+<text x="470.1" y="312.7" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c45" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6</text>
+<rect x="491.9" y="323.6" width="12.2" height="34.4" rx="3" fill="rgba(10,92,69,0.35)"/>
+<text x="498.0" y="319.6" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c45" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">5</text>
+<rect x="519.8" y="330.4" width="12.2" height="27.6" rx="3" fill="rgba(10,92,69,0.35)"/>
+<text x="525.9" y="326.4" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c45" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4</text>
+<rect x="547.7" y="316.7" width="12.2" height="41.3" rx="3" fill="rgba(10,92,69,0.35)"/>
+<text x="553.8" y="312.7" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c45" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6</text>
+<rect x="575.5" y="323.6" width="12.2" height="34.4" rx="3" fill="rgba(10,92,69,0.35)"/>
+<text x="581.6" y="319.6" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c45" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">5</text>
+<rect x="603.4" y="309.8" width="12.2" height="48.2" rx="3" fill="rgba(10,92,69,0.35)"/>
+<text x="609.5" y="305.8" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c45" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">7</text>
+<rect x="631.3" y="309.8" width="12.2" height="48.2" rx="3" fill="rgba(10,92,69,0.35)"/>
+<text x="637.4" y="305.8" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c45" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">7</text>
+<rect x="659.2" y="296.0" width="12.2" height="62.0" rx="3" fill="rgba(10,92,69,0.35)"/>
+<text x="665.2" y="292.0" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c45" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">9</text>
+<rect x="687.0" y="323.6" width="12.2" height="34.4" rx="3" fill="rgba(10,92,69,0.35)"/>
+<text x="693.1" y="319.6" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c45" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">5</text>
+<rect x="714.9" y="316.7" width="12.2" height="41.3" rx="3" fill="rgba(10,92,69,0.35)"/>
+<text x="721.0" y="312.7" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c45" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6</text>
+<rect x="742.8" y="302.9" width="12.2" height="55.1" rx="3" fill="rgba(10,92,69,0.35)"/>
+<text x="748.9" y="298.9" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c45" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">8</text>
+<rect x="770.7" y="309.8" width="12.2" height="48.2" rx="3" fill="rgba(10,92,69,0.35)"/>
+<text x="776.8" y="305.8" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c45" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">7</text>
+<rect x="798.5" y="323.6" width="12.2" height="34.4" rx="3" fill="rgba(10,92,69,0.35)"/>
+<text x="804.6" y="319.6" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c45" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">5</text>
+<rect x="826.4" y="316.7" width="12.2" height="41.3" rx="3" fill="rgba(10,92,69,0.35)"/>
+<text x="832.5" y="312.7" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c45" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6</text>
+<rect x="854.3" y="323.6" width="12.2" height="34.4" rx="3" fill="rgba(10,92,69,0.35)"/>
+<text x="860.4" y="319.6" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c45" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">5</text>
+<rect x="882.2" y="309.8" width="12.2" height="48.2" rx="3" fill="rgba(10,92,69,0.35)"/>
+<text x="888.2" y="305.8" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c45" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">7</text>
+<rect x="910.0" y="323.6" width="12.2" height="34.4" rx="3" fill="rgba(10,92,69,0.35)"/>
+<text x="916.1" y="319.6" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c45" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">5</text>
+<rect x="937.9" y="323.6" width="12.2" height="34.4" rx="3" fill="rgba(10,92,69,0.35)"/>
+<text x="944.0" y="319.6" text-anchor="middle" font-size="12" font-weight="700" fill="#0a5c45" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">5</text>
+<rect x="52.0" y="254.0" width="217.8" height="19.0" rx="9.5" fill="#f4f2f7" stroke="#c9c2d6" stroke-width="1"/>
+<text x="160.9" y="267.4" text-anchor="middle" font-size="11" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">количество вебинаров в неделю</text>
+<polygon points="52.0,250.0 52.0,181.0 79.9,106.3 107.8,169.4 135.6,152.8 163.5,144.5 191.4,181.0 219.2,194.3 247.1,197.6 275.0,156.1 302.9,219.1 330.8,169.4 358.6,177.7 386.5,156.1 414.4,186.0 442.2,194.3 470.1,177.7 498.0,194.3 525.9,210.8 553.8,177.7 581.6,197.6 609.5,136.2 637.4,114.6 665.2,64.9 693.1,181.0 721.0,177.7 748.9,89.7 776.8,139.5 804.6,194.3 832.5,172.7 860.4,219.1 888.2,114.6 916.1,219.1 944.0,194.3 944.0,250.0" fill="rgba(10,92,69,0.14)" stroke="none"/>
+<polyline points="52.0,181.0 79.9,106.3 107.8,169.4 135.6,152.8 163.5,144.5 191.4,181.0 219.2,194.3 247.1,197.6 275.0,156.1 302.9,219.1 330.8,169.4 358.6,177.7 386.5,156.1 414.4,186.0 442.2,194.3 470.1,177.7 498.0,194.3 525.9,210.8 553.8,177.7 581.6,197.6 609.5,136.2 637.4,114.6 665.2,64.9 693.1,181.0 721.0,177.7 748.9,89.7 776.8,139.5 804.6,194.3 832.5,172.7 860.4,219.1 888.2,114.6 916.1,219.1 944.0,194.3" fill="none" stroke="#0a5c45" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="52.0" cy="181.0" r="4" fill="#fff" stroke="#0a5c45" stroke-width="2"/>
+<text x="52.0" y="197.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">11.3%</text>
+<circle cx="79.9" cy="106.3" r="4" fill="#fff" stroke="#0a5c45" stroke-width="2"/>
+<text x="79.9" y="94.3" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">15.8%</text>
+<circle cx="107.8" cy="169.4" r="4" fill="#fff" stroke="#0a5c45" stroke-width="2"/>
+<text x="107.8" y="185.6" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">12%</text>
+<circle cx="135.6" cy="152.8" r="4" fill="#fff" stroke="#0a5c45" stroke-width="2"/>
+<text x="135.6" y="140.8" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">13%</text>
+<circle cx="163.5" cy="144.5" r="4" fill="#fff" stroke="#0a5c45" stroke-width="2"/>
+<text x="163.5" y="128.5" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">13.5%</text>
+<circle cx="191.4" cy="181.0" r="4" fill="#fff" stroke="#0a5c45" stroke-width="2"/>
+<text x="191.4" y="205.6" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">11.3%</text>
+<circle cx="219.2" cy="194.3" r="4" fill="#fff" stroke="#0a5c45" stroke-width="2"/>
+<text x="219.2" y="182.3" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">10.5%</text>
+<circle cx="247.1" cy="197.6" r="4" fill="#fff" stroke="#0a5c45" stroke-width="2"/>
+<text x="247.1" y="213.8" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">10.3%</text>
+<circle cx="275.0" cy="156.1" r="4" fill="#fff" stroke="#0a5c45" stroke-width="2"/>
+<text x="275.0" y="144.1" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">12.8%</text>
+<circle cx="302.9" cy="219.1" r="4" fill="#fff" stroke="#0a5c45" stroke-width="2"/>
+<text x="302.9" y="235.3" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">9%</text>
+<circle cx="330.8" cy="169.4" r="4" fill="#fff" stroke="#0a5c45" stroke-width="2"/>
+<text x="330.8" y="157.4" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">12%</text>
+<circle cx="358.6" cy="177.7" r="4" fill="#fff" stroke="#0a5c45" stroke-width="2"/>
+<text x="358.6" y="193.9" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">11.5%</text>
+<circle cx="386.5" cy="156.1" r="4" fill="#fff" stroke="#0a5c45" stroke-width="2"/>
+<text x="386.5" y="144.1" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">12.8%</text>
+<circle cx="414.4" cy="186.0" r="4" fill="#fff" stroke="#0a5c45" stroke-width="2"/>
+<text x="414.4" y="202.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">11%</text>
+<circle cx="442.2" cy="194.3" r="4" fill="#fff" stroke="#0a5c45" stroke-width="2"/>
+<text x="442.2" y="218.9" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">10.5%</text>
+<circle cx="470.1" cy="177.7" r="4" fill="#fff" stroke="#0a5c45" stroke-width="2"/>
+<text x="470.1" y="165.7" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">11.5%</text>
+<circle cx="498.0" cy="194.3" r="4" fill="#fff" stroke="#0a5c45" stroke-width="2"/>
+<text x="498.0" y="218.9" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">10.5%</text>
+<circle cx="525.9" cy="210.8" r="4" fill="#fff" stroke="#0a5c45" stroke-width="2"/>
+<text x="525.9" y="235.4" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">9.5%</text>
+<circle cx="553.8" cy="177.7" r="4" fill="#fff" stroke="#0a5c45" stroke-width="2"/>
+<text x="553.8" y="165.7" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">11.5%</text>
+<circle cx="581.6" cy="197.6" r="4" fill="#fff" stroke="#0a5c45" stroke-width="2"/>
+<text x="581.6" y="213.8" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">10.3%</text>
+<circle cx="609.5" cy="136.2" r="4" fill="#fff" stroke="#0a5c45" stroke-width="2"/>
+<text x="589.5" y="142.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">14%</text>
+<circle cx="637.4" cy="114.6" r="4" fill="#fff" stroke="#0a5c45" stroke-width="2"/>
+<text x="649.4" y="137.6" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">15.3%</text>
+<circle cx="665.2" cy="64.9" r="4" fill="#fff" stroke="#0a5c45" stroke-width="2"/>
+<text x="665.2" y="52.9" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">18.3%</text>
+<circle cx="693.1" cy="181.0" r="4" fill="#fff" stroke="#0a5c45" stroke-width="2"/>
+<text x="679.1" y="197.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">11.3%</text>
+<circle cx="721.0" cy="177.7" r="4" fill="#fff" stroke="#0a5c45" stroke-width="2"/>
+<text x="729.0" y="197.1" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">11.5%</text>
+<circle cx="748.9" cy="89.7" r="4" fill="#fff" stroke="#0a5c45" stroke-width="2"/>
+<text x="748.9" y="77.7" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">16.8%</text>
+<circle cx="776.8" cy="139.5" r="4" fill="#fff" stroke="#0a5c45" stroke-width="2"/>
+<text x="764.8" y="165.3" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">13.8%</text>
+<circle cx="804.6" cy="194.3" r="4" fill="#fff" stroke="#0a5c45" stroke-width="2"/>
+<text x="804.6" y="210.5" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">10.5%</text>
+<circle cx="832.5" cy="172.7" r="4" fill="#fff" stroke="#0a5c45" stroke-width="2"/>
+<text x="832.5" y="160.7" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">11.8%</text>
+<circle cx="860.4" cy="219.1" r="4" fill="#fff" stroke="#0a5c45" stroke-width="2"/>
+<text x="860.4" y="235.3" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">9%</text>
+<circle cx="888.2" cy="114.6" r="4" fill="#fff" stroke="#0a5c45" stroke-width="2"/>
+<text x="888.2" y="102.6" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">15.3%</text>
+<circle cx="916.1" cy="219.1" r="4" fill="#fff" stroke="#0a5c45" stroke-width="2"/>
+<text x="916.1" y="235.3" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">9%</text>
+<circle cx="944.0" cy="194.3" r="4" fill="#fff" stroke="#0a5c45" stroke-width="2"/>
+<text x="944.0" y="182.3" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">10.5%</text>
+<text x="52.0" y="396" text-anchor="middle" font-size="10" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">12.01</text>
+<text x="107.8" y="396" text-anchor="middle" font-size="10" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">26.01</text>
+<text x="163.5" y="396" text-anchor="middle" font-size="10" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">09.02</text>
+<text x="219.2" y="396" text-anchor="middle" font-size="10" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">23.02</text>
+<text x="275.0" y="396" text-anchor="middle" font-size="10" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">09.03</text>
+<text x="330.8" y="396" text-anchor="middle" font-size="10" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">23.03</text>
+<text x="386.5" y="396" text-anchor="middle" font-size="10" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">06.04</text>
+<text x="442.2" y="396" text-anchor="middle" font-size="10" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">20.04</text>
+<text x="498.0" y="396" text-anchor="middle" font-size="10" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">04.05</text>
+<text x="553.8" y="396" text-anchor="middle" font-size="10" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">18.05</text>
+<text x="609.5" y="396" text-anchor="middle" font-size="10" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">01.06</text>
+<text x="665.2" y="396" text-anchor="middle" font-size="10" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">15.06</text>
+<text x="721.0" y="396" text-anchor="middle" font-size="10" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">29.06</text>
+<text x="776.8" y="396" text-anchor="middle" font-size="10" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">13.07</text>
+<text x="832.5" y="396" text-anchor="middle" font-size="10" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">27.07</text>
+<text x="888.2" y="396" text-anchor="middle" font-size="10" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">10.08</text>
+<text x="944.0" y="396" text-anchor="middle" font-size="10" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">24.08</text>
+</svg></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>Часов в неделю</h2>
+        </div>
+      </div>
+      <div class="kpi-grid compact">
+        <div class="kpi">
+          <div class="kpi-label">Среднее в неделю</div>
+          <div class="kpi-value accent">4.8</div>
+          <div class="kpi-sub">часов за весь период</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Пиковая неделя</div>
+          <div class="kpi-value ok">7.3</div>
+          <div class="kpi-sub">15.06–21.06</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Минимальная неделя</div>
+          <div class="kpi-value warn">3.6</div>
+          <div class="kpi-sub">16.03–22.03</div>
+        </div>
+      </div>
+      <div class="chart-wrap"><svg class="chart-svg" viewBox="0 0 960 410" width="100%" height="100%" role="img" aria-label="Часы по неделям" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="960" height="410" fill="#ffffff"/>
+<line x1="52" y1="202.5" x2="944" y2="202.5" stroke="#e4dcef" stroke-width="1"/>
+<text x="44" y="206.5" text-anchor="end" font-size="11" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4</text>
+<line x1="52" y1="119.1" x2="944" y2="119.1" stroke="#e4dcef" stroke-width="1"/>
+<text x="44" y="123.1" text-anchor="end" font-size="11" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6</text>
+<line x1="52" y1="35.7" x2="944" y2="35.7" stroke="#e4dcef" stroke-width="1"/>
+<text x="44" y="39.7" text-anchor="end" font-size="11" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">8</text>
+<line x1="52" y1="358.0" x2="944" y2="358.0" stroke="#e4dcef" stroke-width="1"/>
+<rect x="45.9" y="323.6" width="12.2" height="34.4" rx="3" fill="rgba(112,0,255,0.28)"/>
+<text x="52.0" y="319.6" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">5</text>
+<rect x="73.8" y="302.9" width="12.2" height="55.1" rx="3" fill="rgba(112,0,255,0.28)"/>
+<text x="79.9" y="298.9" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">8</text>
+<rect x="101.7" y="316.7" width="12.2" height="41.3" rx="3" fill="rgba(112,0,255,0.28)"/>
+<text x="107.8" y="312.7" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6</text>
+<rect x="129.5" y="316.7" width="12.2" height="41.3" rx="3" fill="rgba(112,0,255,0.28)"/>
+<text x="135.6" y="312.7" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6</text>
+<rect x="157.4" y="309.8" width="12.2" height="48.2" rx="3" fill="rgba(112,0,255,0.28)"/>
+<text x="163.5" y="305.8" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">7</text>
+<rect x="185.3" y="316.7" width="12.2" height="41.3" rx="3" fill="rgba(112,0,255,0.28)"/>
+<text x="191.4" y="312.7" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6</text>
+<rect x="213.2" y="323.6" width="12.2" height="34.4" rx="3" fill="rgba(112,0,255,0.28)"/>
+<text x="219.2" y="319.6" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">5</text>
+<rect x="241.0" y="316.7" width="12.2" height="41.3" rx="3" fill="rgba(112,0,255,0.28)"/>
+<text x="247.1" y="312.7" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6</text>
+<rect x="268.9" y="316.7" width="12.2" height="41.3" rx="3" fill="rgba(112,0,255,0.28)"/>
+<text x="275.0" y="312.7" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6</text>
+<rect x="296.8" y="323.6" width="12.2" height="34.4" rx="3" fill="rgba(112,0,255,0.28)"/>
+<text x="302.9" y="319.6" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">5</text>
+<rect x="324.7" y="316.7" width="12.2" height="41.3" rx="3" fill="rgba(112,0,255,0.28)"/>
+<text x="330.8" y="312.7" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6</text>
+<rect x="352.5" y="316.7" width="12.2" height="41.3" rx="3" fill="rgba(112,0,255,0.28)"/>
+<text x="358.6" y="312.7" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6</text>
+<rect x="380.4" y="316.7" width="12.2" height="41.3" rx="3" fill="rgba(112,0,255,0.28)"/>
+<text x="386.5" y="312.7" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6</text>
+<rect x="408.3" y="316.7" width="12.2" height="41.3" rx="3" fill="rgba(112,0,255,0.28)"/>
+<text x="414.4" y="312.7" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6</text>
+<rect x="436.2" y="323.6" width="12.2" height="34.4" rx="3" fill="rgba(112,0,255,0.28)"/>
+<text x="442.2" y="319.6" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">5</text>
+<rect x="464.0" y="316.7" width="12.2" height="41.3" rx="3" fill="rgba(112,0,255,0.28)"/>
+<text x="470.1" y="312.7" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6</text>
+<rect x="491.9" y="323.6" width="12.2" height="34.4" rx="3" fill="rgba(112,0,255,0.28)"/>
+<text x="498.0" y="319.6" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">5</text>
+<rect x="519.8" y="330.4" width="12.2" height="27.6" rx="3" fill="rgba(112,0,255,0.28)"/>
+<text x="525.9" y="326.4" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4</text>
+<rect x="547.7" y="316.7" width="12.2" height="41.3" rx="3" fill="rgba(112,0,255,0.28)"/>
+<text x="553.8" y="312.7" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6</text>
+<rect x="575.5" y="323.6" width="12.2" height="34.4" rx="3" fill="rgba(112,0,255,0.28)"/>
+<text x="581.6" y="319.6" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">5</text>
+<rect x="603.4" y="309.8" width="12.2" height="48.2" rx="3" fill="rgba(112,0,255,0.28)"/>
+<text x="609.5" y="305.8" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">7</text>
+<rect x="631.3" y="309.8" width="12.2" height="48.2" rx="3" fill="rgba(112,0,255,0.28)"/>
+<text x="637.4" y="305.8" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">7</text>
+<rect x="659.2" y="296.0" width="12.2" height="62.0" rx="3" fill="rgba(112,0,255,0.28)"/>
+<text x="665.2" y="292.0" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">9</text>
+<rect x="687.0" y="323.6" width="12.2" height="34.4" rx="3" fill="rgba(112,0,255,0.28)"/>
+<text x="693.1" y="319.6" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">5</text>
+<rect x="714.9" y="316.7" width="12.2" height="41.3" rx="3" fill="rgba(112,0,255,0.28)"/>
+<text x="721.0" y="312.7" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6</text>
+<rect x="742.8" y="302.9" width="12.2" height="55.1" rx="3" fill="rgba(112,0,255,0.28)"/>
+<text x="748.9" y="298.9" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">8</text>
+<rect x="770.7" y="309.8" width="12.2" height="48.2" rx="3" fill="rgba(112,0,255,0.28)"/>
+<text x="776.8" y="305.8" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">7</text>
+<rect x="798.5" y="323.6" width="12.2" height="34.4" rx="3" fill="rgba(112,0,255,0.28)"/>
+<text x="804.6" y="319.6" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">5</text>
+<rect x="826.4" y="316.7" width="12.2" height="41.3" rx="3" fill="rgba(112,0,255,0.28)"/>
+<text x="832.5" y="312.7" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6</text>
+<rect x="854.3" y="323.6" width="12.2" height="34.4" rx="3" fill="rgba(112,0,255,0.28)"/>
+<text x="860.4" y="319.6" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">5</text>
+<rect x="882.2" y="309.8" width="12.2" height="48.2" rx="3" fill="rgba(112,0,255,0.28)"/>
+<text x="888.2" y="305.8" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">7</text>
+<rect x="910.0" y="323.6" width="12.2" height="34.4" rx="3" fill="rgba(112,0,255,0.28)"/>
+<text x="916.1" y="319.6" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">5</text>
+<rect x="937.9" y="323.6" width="12.2" height="34.4" rx="3" fill="rgba(112,0,255,0.28)"/>
+<text x="944.0" y="319.6" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">5</text>
+<rect x="52.0" y="254.0" width="217.8" height="19.0" rx="9.5" fill="#f4f2f7" stroke="#c9c2d6" stroke-width="1"/>
+<text x="160.9" y="267.4" text-anchor="middle" font-size="11" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">количество вебинаров в неделю</text>
+<polygon points="52.0,250.0 52.0,181.6 79.9,106.6 107.8,169.1 135.6,152.4 163.5,144.1 191.4,181.6 219.2,194.1 247.1,198.3 275.0,156.6 302.9,219.1 330.8,169.1 358.6,177.4 386.5,156.6 414.4,185.8 442.2,194.1 470.1,177.4 498.0,194.1 525.9,210.8 553.8,177.4 581.6,198.3 609.5,135.7 637.4,114.9 665.2,64.9 693.1,181.6 721.0,177.4 748.9,89.9 776.8,139.9 804.6,194.1 832.5,173.3 860.4,219.1 888.2,114.9 916.1,219.1 944.0,194.1 944.0,250.0" fill="rgba(112,0,255,0.14)" stroke="none"/>
+<polyline points="52.0,181.6 79.9,106.6 107.8,169.1 135.6,152.4 163.5,144.1 191.4,181.6 219.2,194.1 247.1,198.3 275.0,156.6 302.9,219.1 330.8,169.1 358.6,177.4 386.5,156.6 414.4,185.8 442.2,194.1 470.1,177.4 498.0,194.1 525.9,210.8 553.8,177.4 581.6,198.3 609.5,135.7 637.4,114.9 665.2,64.9 693.1,181.6 721.0,177.4 748.9,89.9 776.8,139.9 804.6,194.1 832.5,173.3 860.4,219.1 888.2,114.9 916.1,219.1 944.0,194.1" fill="none" stroke="#7000ff" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="52.0" cy="181.6" r="4" fill="#fff" stroke="#7000ff" stroke-width="2"/>
+<text x="52.0" y="197.8" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4.5</text>
+<circle cx="79.9" cy="106.6" r="4" fill="#fff" stroke="#7000ff" stroke-width="2"/>
+<text x="79.9" y="94.6" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6.3</text>
+<circle cx="107.8" cy="169.1" r="4" fill="#fff" stroke="#7000ff" stroke-width="2"/>
+<text x="107.8" y="185.3" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4.8</text>
+<circle cx="135.6" cy="152.4" r="4" fill="#fff" stroke="#7000ff" stroke-width="2"/>
+<text x="135.6" y="140.4" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">5.2</text>
+<circle cx="163.5" cy="144.1" r="4" fill="#fff" stroke="#7000ff" stroke-width="2"/>
+<text x="163.5" y="132.1" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">5.4</text>
+<circle cx="191.4" cy="181.6" r="4" fill="#fff" stroke="#7000ff" stroke-width="2"/>
+<text x="191.4" y="206.2" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4.5</text>
+<circle cx="219.2" cy="194.1" r="4" fill="#fff" stroke="#7000ff" stroke-width="2"/>
+<text x="219.2" y="182.1" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4.2</text>
+<circle cx="247.1" cy="198.3" r="4" fill="#fff" stroke="#7000ff" stroke-width="2"/>
+<text x="247.1" y="214.5" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4.1</text>
+<circle cx="275.0" cy="156.6" r="4" fill="#fff" stroke="#7000ff" stroke-width="2"/>
+<text x="275.0" y="144.6" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">5.1</text>
+<circle cx="302.9" cy="219.1" r="4" fill="#fff" stroke="#7000ff" stroke-width="2"/>
+<text x="302.9" y="235.3" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">3.6</text>
+<circle cx="330.8" cy="169.1" r="4" fill="#fff" stroke="#7000ff" stroke-width="2"/>
+<text x="330.8" y="157.1" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4.8</text>
+<circle cx="358.6" cy="177.4" r="4" fill="#fff" stroke="#7000ff" stroke-width="2"/>
+<text x="358.6" y="193.6" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4.6</text>
+<circle cx="386.5" cy="156.6" r="4" fill="#fff" stroke="#7000ff" stroke-width="2"/>
+<text x="386.5" y="144.6" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">5.1</text>
+<circle cx="414.4" cy="185.8" r="4" fill="#fff" stroke="#7000ff" stroke-width="2"/>
+<text x="414.4" y="202.0" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4.4</text>
+<circle cx="442.2" cy="194.1" r="4" fill="#fff" stroke="#7000ff" stroke-width="2"/>
+<text x="442.2" y="210.3" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4.2</text>
+<circle cx="470.1" cy="177.4" r="4" fill="#fff" stroke="#7000ff" stroke-width="2"/>
+<text x="470.1" y="165.4" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4.6</text>
+<circle cx="498.0" cy="194.1" r="4" fill="#fff" stroke="#7000ff" stroke-width="2"/>
+<text x="498.0" y="182.1" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4.2</text>
+<circle cx="525.9" cy="210.8" r="4" fill="#fff" stroke="#7000ff" stroke-width="2"/>
+<text x="525.9" y="227.0" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">3.8</text>
+<circle cx="553.8" cy="177.4" r="4" fill="#fff" stroke="#7000ff" stroke-width="2"/>
+<text x="553.8" y="165.4" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4.6</text>
+<circle cx="581.6" cy="198.3" r="4" fill="#fff" stroke="#7000ff" stroke-width="2"/>
+<text x="581.6" y="214.5" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4.1</text>
+<circle cx="609.5" cy="135.7" r="4" fill="#fff" stroke="#7000ff" stroke-width="2"/>
+<text x="609.5" y="123.7" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">5.6</text>
+<circle cx="637.4" cy="114.9" r="4" fill="#fff" stroke="#7000ff" stroke-width="2"/>
+<text x="645.4" y="131.5" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6.1</text>
+<circle cx="665.2" cy="64.9" r="4" fill="#fff" stroke="#7000ff" stroke-width="2"/>
+<text x="665.2" y="52.9" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">7.3</text>
+<circle cx="693.1" cy="181.6" r="4" fill="#fff" stroke="#7000ff" stroke-width="2"/>
+<text x="693.1" y="197.8" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4.5</text>
+<circle cx="721.0" cy="177.4" r="4" fill="#fff" stroke="#7000ff" stroke-width="2"/>
+<text x="721.0" y="193.6" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4.6</text>
+<circle cx="748.9" cy="89.9" r="4" fill="#fff" stroke="#7000ff" stroke-width="2"/>
+<text x="748.9" y="77.9" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6.7</text>
+<circle cx="776.8" cy="139.9" r="4" fill="#fff" stroke="#7000ff" stroke-width="2"/>
+<text x="772.8" y="164.9" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">5.5</text>
+<circle cx="804.6" cy="194.1" r="4" fill="#fff" stroke="#7000ff" stroke-width="2"/>
+<text x="804.6" y="210.3" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4.2</text>
+<circle cx="832.5" cy="173.3" r="4" fill="#fff" stroke="#7000ff" stroke-width="2"/>
+<text x="832.5" y="161.3" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4.7</text>
+<circle cx="860.4" cy="219.1" r="4" fill="#fff" stroke="#7000ff" stroke-width="2"/>
+<text x="860.4" y="235.3" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">3.6</text>
+<circle cx="888.2" cy="114.9" r="4" fill="#fff" stroke="#7000ff" stroke-width="2"/>
+<text x="888.2" y="102.9" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6.1</text>
+<circle cx="916.1" cy="219.1" r="4" fill="#fff" stroke="#7000ff" stroke-width="2"/>
+<text x="916.1" y="235.3" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">3.6</text>
+<circle cx="944.0" cy="194.1" r="4" fill="#fff" stroke="#7000ff" stroke-width="2"/>
+<text x="944.0" y="182.1" text-anchor="middle" font-size="12" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4.2</text>
+<text x="52.0" y="396" text-anchor="middle" font-size="10" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">12.01</text>
+<text x="107.8" y="396" text-anchor="middle" font-size="10" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">26.01</text>
+<text x="163.5" y="396" text-anchor="middle" font-size="10" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">09.02</text>
+<text x="219.2" y="396" text-anchor="middle" font-size="10" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">23.02</text>
+<text x="275.0" y="396" text-anchor="middle" font-size="10" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">09.03</text>
+<text x="330.8" y="396" text-anchor="middle" font-size="10" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">23.03</text>
+<text x="386.5" y="396" text-anchor="middle" font-size="10" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">06.04</text>
+<text x="442.2" y="396" text-anchor="middle" font-size="10" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">20.04</text>
+<text x="498.0" y="396" text-anchor="middle" font-size="10" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">04.05</text>
+<text x="553.8" y="396" text-anchor="middle" font-size="10" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">18.05</text>
+<text x="609.5" y="396" text-anchor="middle" font-size="10" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">01.06</text>
+<text x="665.2" y="396" text-anchor="middle" font-size="10" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">15.06</text>
+<text x="721.0" y="396" text-anchor="middle" font-size="10" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">29.06</text>
+<text x="776.8" y="396" text-anchor="middle" font-size="10" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">13.07</text>
+<text x="832.5" y="396" text-anchor="middle" font-size="10" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">27.07</text>
+<text x="888.2" y="396" text-anchor="middle" font-size="10" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">10.08</text>
+<text x="944.0" y="396" text-anchor="middle" font-size="10" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">24.08</text>
+</svg></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>По месяцам</h2>
+          <p class="section-desc">среднее · мин · макс, часы/нед</p>
+        </div>
+      </div>
+      <div class="legend">
+        <span class="legend-item"><span class="legend-dot" style="background:#7000ff"></span> Среднее</span>
+        <span class="legend-item"><span class="legend-dot bar" style="background:#9ca3ff"></span> Диапазон недели</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#0a7a55"></span> Макс</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#8a4b00"></span> Мин</span>
+      </div>
+      <div class="chart-wrap"><svg class="chart-svg" viewBox="0 0 900 340" width="100%" height="100%" role="img" aria-label="Среднее по месяцам" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="900" height="340" fill="#ffffff"/>
+<line x1="72" y1="239.1" x2="860" y2="239.1" stroke="#e4dcef" stroke-width="1"/>
+<text x="52" y="243.1" text-anchor="end" font-size="11" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4</text>
+<line x1="72" y1="141.0" x2="860" y2="141.0" stroke="#e4dcef" stroke-width="1"/>
+<text x="52" y="145.0" text-anchor="end" font-size="11" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6</text>
+<line x1="72" y1="43.0" x2="860" y2="43.0" stroke="#e4dcef" stroke-width="1"/>
+<text x="52" y="47.0" text-anchor="end" font-size="11" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">8</text>
+<rect x="58.0" y="126.3" width="28.0" height="88.2" rx="5" fill="rgba(156,163,255,0.38)" stroke="rgba(112,0,255,0.28)" stroke-width="1"/>
+<text x="72.0" y="122.3" text-anchor="middle" font-size="11" font-weight="700" fill="#0a7a55" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6.3</text>
+<text x="72.0" y="226.6" text-anchor="middle" font-size="11" font-weight="700" fill="#8a4b00" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4.5</text>
+<text x="72.0" y="328" text-anchor="middle" font-size="12" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">Янв</text>
+<rect x="170.6" y="170.5" width="28.0" height="58.8" rx="5" fill="rgba(156,163,255,0.38)" stroke="rgba(112,0,255,0.28)" stroke-width="1"/>
+<text x="184.6" y="166.5" text-anchor="middle" font-size="11" font-weight="700" fill="#0a7a55" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">5.4</text>
+<text x="184.6" y="241.3" text-anchor="middle" font-size="11" font-weight="700" fill="#8a4b00" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4.2</text>
+<text x="184.6" y="328" text-anchor="middle" font-size="12" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">Фев</text>
+<rect x="283.1" y="185.2" width="28.0" height="73.5" rx="5" fill="rgba(156,163,255,0.38)" stroke="rgba(112,0,255,0.28)" stroke-width="1"/>
+<text x="297.1" y="181.2" text-anchor="middle" font-size="11" font-weight="700" fill="#0a7a55" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">5.1</text>
+<text x="297.1" y="270.7" text-anchor="middle" font-size="11" font-weight="700" fill="#8a4b00" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">3.6</text>
+<text x="297.1" y="328" text-anchor="middle" font-size="12" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">Мар</text>
+<rect x="395.7" y="185.2" width="28.0" height="44.1" rx="5" fill="rgba(156,163,255,0.38)" stroke="rgba(112,0,255,0.28)" stroke-width="1"/>
+<text x="409.7" y="181.2" text-anchor="middle" font-size="11" font-weight="700" fill="#0a7a55" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">5.1</text>
+<text x="409.7" y="241.3" text-anchor="middle" font-size="11" font-weight="700" fill="#8a4b00" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4.2</text>
+<text x="409.7" y="328" text-anchor="middle" font-size="12" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">Апр</text>
+<rect x="508.3" y="209.7" width="28.0" height="39.2" rx="5" fill="rgba(156,163,255,0.38)" stroke="rgba(112,0,255,0.28)" stroke-width="1"/>
+<text x="522.3" y="205.7" text-anchor="middle" font-size="11" font-weight="700" fill="#0a7a55" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4.6</text>
+<text x="522.3" y="260.9" text-anchor="middle" font-size="11" font-weight="700" fill="#8a4b00" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">3.8</text>
+<text x="522.3" y="328" text-anchor="middle" font-size="12" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">Май</text>
+<rect x="620.9" y="77.3" width="28.0" height="137.2" rx="5" fill="rgba(156,163,255,0.38)" stroke="rgba(112,0,255,0.28)" stroke-width="1"/>
+<text x="634.9" y="73.3" text-anchor="middle" font-size="11" font-weight="700" fill="#0a7a55" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">7.3</text>
+<text x="634.9" y="226.6" text-anchor="middle" font-size="11" font-weight="700" fill="#8a4b00" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4.5</text>
+<text x="634.9" y="328" text-anchor="middle" font-size="12" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">Июн</text>
+<rect x="733.4" y="106.7" width="28.0" height="122.5" rx="5" fill="rgba(156,163,255,0.38)" stroke="rgba(112,0,255,0.28)" stroke-width="1"/>
+<text x="747.4" y="102.7" text-anchor="middle" font-size="11" font-weight="700" fill="#0a7a55" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6.7</text>
+<text x="747.4" y="241.3" text-anchor="middle" font-size="11" font-weight="700" fill="#8a4b00" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4.2</text>
+<text x="747.4" y="328" text-anchor="middle" font-size="12" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">Июл</text>
+<rect x="846.0" y="136.1" width="28.0" height="122.5" rx="5" fill="rgba(156,163,255,0.38)" stroke="rgba(112,0,255,0.28)" stroke-width="1"/>
+<text x="860.0" y="132.1" text-anchor="middle" font-size="11" font-weight="700" fill="#0a7a55" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6.1</text>
+<text x="860.0" y="270.7" text-anchor="middle" font-size="11" font-weight="700" fill="#8a4b00" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">3.6</text>
+<text x="860.0" y="328" text-anchor="middle" font-size="12" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">Авг</text>
+<polyline points="72.0,180.3 184.6,199.9 297.1,219.5 409.7,209.7 522.3,229.3 634.9,160.6 747.4,175.4 860.0,219.5" fill="none" stroke="#7000ff" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="72.0" cy="180.3" r="7" fill="#fff" stroke="#7000ff" stroke-width="3"/>
+<rect x="77.8" y="163.3" width="36.3" height="18.0" rx="9.0" fill="rgba(255,255,255,0.55)" stroke="#b0a9bc" stroke-width="1"/>
+<text x="96.0" y="176.3" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">5.2</text>
+<circle cx="184.6" cy="199.9" r="7" fill="#fff" stroke="#7000ff" stroke-width="3"/>
+<rect x="190.4" y="182.9" width="36.3" height="18.0" rx="9.0" fill="rgba(255,255,255,0.55)" stroke="#b0a9bc" stroke-width="1"/>
+<text x="208.6" y="195.9" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4.8</text>
+<circle cx="297.1" cy="219.5" r="7" fill="#fff" stroke="#7000ff" stroke-width="3"/>
+<rect x="303.0" y="198.5" width="36.3" height="18.0" rx="9.0" fill="rgba(255,255,255,0.55)" stroke="#b0a9bc" stroke-width="1"/>
+<text x="321.1" y="211.5" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4.4</text>
+<circle cx="409.7" cy="209.7" r="7" fill="#fff" stroke="#7000ff" stroke-width="3"/>
+<rect x="415.6" y="192.7" width="36.3" height="18.0" rx="9.0" fill="rgba(255,255,255,0.55)" stroke="#b0a9bc" stroke-width="1"/>
+<text x="433.7" y="205.7" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4.6</text>
+<circle cx="522.3" cy="229.3" r="7" fill="#fff" stroke="#7000ff" stroke-width="3"/>
+<rect x="528.1" y="220.3" width="36.3" height="18.0" rx="9.0" fill="rgba(255,255,255,0.55)" stroke="#b0a9bc" stroke-width="1"/>
+<text x="546.3" y="233.3" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4.2</text>
+<circle cx="634.9" cy="160.6" r="7" fill="#fff" stroke="#7000ff" stroke-width="3"/>
+<rect x="640.7" y="143.6" width="36.3" height="18.0" rx="9.0" fill="rgba(255,255,255,0.55)" stroke="#b0a9bc" stroke-width="1"/>
+<text x="658.9" y="156.6" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">5.6</text>
+<circle cx="747.4" cy="175.4" r="7" fill="#fff" stroke="#7000ff" stroke-width="3"/>
+<rect x="753.3" y="166.4" width="36.3" height="18.0" rx="9.0" fill="rgba(255,255,255,0.55)" stroke="#b0a9bc" stroke-width="1"/>
+<text x="771.4" y="179.4" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">5.3</text>
+<circle cx="860.0" cy="219.5" r="7" fill="#fff" stroke="#7000ff" stroke-width="3"/>
+<rect x="865.8" y="210.5" width="36.3" height="18.0" rx="9.0" fill="rgba(255,255,255,0.55)" stroke="#b0a9bc" stroke-width="1"/>
+<text x="884.0" y="223.5" text-anchor="middle" font-size="12" font-weight="700" fill="#7000ff" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4.4</text>
+</svg></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>По категориям</h2>
+          <p class="section-desc">в среднем часов в неделю</p>
+        </div>
+      </div>
+      <div class="legend"><span class='legend-item'><span class='legend-dot' style='background:#FFC000'></span>Регулярные вебинары бизнеса</span><span class='legend-item'><span class='legend-dot' style='background:#7F7F7F'></span>Разовые вебинары бизнеса</span><span class='legend-item'><span class='legend-dot' style='background:#92D050'></span>Радио АТОН</span><span class='legend-item'><span class='legend-dot' style='background:#5B9BD5'></span>Иное</span></div>
+      <div class="chart-wrap"><svg class="chart-svg" viewBox="0 0 900 360" width="100%" height="100%" role="img" aria-label="Категории по месяцам" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="900" height="360" fill="#ffffff"/>
+<line x1="48" y1="324.0" x2="884" y2="324.0" stroke="#e4dcef" stroke-width="1"/>
+<text x="40" y="328.0" text-anchor="end" font-size="11" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">0</text>
+<line x1="48" y1="229.6" x2="884" y2="229.6" stroke="#e4dcef" stroke-width="1"/>
+<text x="40" y="233.6" text-anchor="end" font-size="11" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">2</text>
+<line x1="48" y1="135.2" x2="884" y2="135.2" stroke="#e4dcef" stroke-width="1"/>
+<text x="40" y="139.2" text-anchor="end" font-size="11" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4</text>
+<line x1="48" y1="40.8" x2="884" y2="40.8" stroke="#e4dcef" stroke-width="1"/>
+<text x="40" y="44.8" text-anchor="end" font-size="11" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">6</text>
+<rect x="66.3" y="168.2" width="67.9" height="155.8" fill="#FFC000" rx="3"/>
+<text x="100.2" y="250.1" text-anchor="middle" font-size="10" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">3.3</text>
+<rect x="66.3" y="130.5" width="67.9" height="37.8" fill="#7F7F7F" rx="3"/>
+<text x="100.2" y="153.3" text-anchor="middle" font-size="10" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">0.8</text>
+<rect x="66.3" y="116.3" width="67.9" height="14.2" fill="#92D050" rx="3"/>
+<rect x="66.3" y="78.5" width="67.9" height="37.8" fill="#5B9BD5" rx="3"/>
+<text x="100.2" y="101.4" text-anchor="middle" font-size="10" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">0.8</text>
+<text x="100.2" y="348" text-anchor="middle" font-size="12" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">Янв</text>
+<rect x="170.8" y="144.6" width="67.9" height="179.4" fill="#FFC000" rx="3"/>
+<text x="204.8" y="238.3" text-anchor="middle" font-size="10" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">3.8</text>
+<rect x="170.8" y="130.5" width="67.9" height="14.2" fill="#7F7F7F" rx="3"/>
+<rect x="170.8" y="97.4" width="67.9" height="33.0" fill="#5B9BD5" rx="3"/>
+<text x="204.8" y="117.9" text-anchor="middle" font-size="10" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">0.7</text>
+<text x="204.8" y="348" text-anchor="middle" font-size="12" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">Фев</text>
+<rect x="275.3" y="154.1" width="67.9" height="169.9" fill="#FFC000" rx="3"/>
+<text x="309.2" y="243.0" text-anchor="middle" font-size="10" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">3.6</text>
+<rect x="275.3" y="144.6" width="67.9" height="9.4" fill="#7F7F7F" rx="3"/>
+<rect x="275.3" y="139.9" width="67.9" height="4.7" fill="#92D050" rx="3"/>
+<rect x="275.3" y="116.3" width="67.9" height="23.6" fill="#5B9BD5" rx="3"/>
+<text x="309.2" y="132.1" text-anchor="middle" font-size="10" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">0.5</text>
+<text x="309.2" y="348" text-anchor="middle" font-size="12" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">Мар</text>
+<rect x="379.8" y="163.5" width="67.9" height="160.5" fill="#FFC000" rx="3"/>
+<text x="413.8" y="247.8" text-anchor="middle" font-size="10" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">3.4</text>
+<rect x="379.8" y="154.1" width="67.9" height="9.4" fill="#7F7F7F" rx="3"/>
+<rect x="379.8" y="130.5" width="67.9" height="23.6" fill="#92D050" rx="3"/>
+<text x="413.8" y="146.3" text-anchor="middle" font-size="10" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">0.5</text>
+<rect x="379.8" y="106.9" width="67.9" height="23.6" fill="#5B9BD5" rx="3"/>
+<text x="413.8" y="122.7" text-anchor="middle" font-size="10" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">0.5</text>
+<text x="413.8" y="348" text-anchor="middle" font-size="12" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">Апр</text>
+<rect x="484.3" y="144.6" width="67.9" height="179.4" fill="#FFC000" rx="3"/>
+<text x="518.2" y="238.3" text-anchor="middle" font-size="10" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">3.8</text>
+<rect x="484.3" y="125.7" width="67.9" height="18.9" fill="#5B9BD5" rx="3"/>
+<text x="518.2" y="139.2" text-anchor="middle" font-size="10" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">0.4</text>
+<text x="518.2" y="348" text-anchor="middle" font-size="12" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">Май</text>
+<rect x="588.8" y="130.5" width="67.9" height="193.5" fill="#FFC000" rx="3"/>
+<text x="622.8" y="231.2" text-anchor="middle" font-size="10" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4.1</text>
+<rect x="588.8" y="106.9" width="67.9" height="23.6" fill="#7F7F7F" rx="3"/>
+<text x="622.8" y="122.7" text-anchor="middle" font-size="10" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">0.5</text>
+<rect x="588.8" y="73.8" width="67.9" height="33.0" fill="#92D050" rx="3"/>
+<text x="622.8" y="94.3" text-anchor="middle" font-size="10" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">0.7</text>
+<rect x="588.8" y="59.7" width="67.9" height="14.2" fill="#5B9BD5" rx="3"/>
+<text x="622.8" y="348" text-anchor="middle" font-size="12" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">Июн</text>
+<rect x="693.3" y="139.9" width="67.9" height="184.1" fill="#FFC000" rx="3"/>
+<text x="727.2" y="236.0" text-anchor="middle" font-size="10" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">3.9</text>
+<rect x="693.3" y="121.0" width="67.9" height="18.9" fill="#7F7F7F" rx="3"/>
+<text x="727.2" y="134.5" text-anchor="middle" font-size="10" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">0.4</text>
+<rect x="693.3" y="102.1" width="67.9" height="18.9" fill="#92D050" rx="3"/>
+<text x="727.2" y="115.6" text-anchor="middle" font-size="10" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">0.4</text>
+<rect x="693.3" y="73.8" width="67.9" height="28.3" fill="#5B9BD5" rx="3"/>
+<text x="727.2" y="92.0" text-anchor="middle" font-size="10" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">0.6</text>
+<text x="727.2" y="348" text-anchor="middle" font-size="12" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">Июл</text>
+<rect x="797.8" y="135.2" width="67.9" height="188.8" fill="#FFC000" rx="3"/>
+<text x="831.8" y="233.6" text-anchor="middle" font-size="10" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">4</text>
+<rect x="797.8" y="116.3" width="67.9" height="18.9" fill="#5B9BD5" rx="3"/>
+<text x="831.8" y="129.7" text-anchor="middle" font-size="10" font-weight="700" fill="#0f0f0f" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">0.4</text>
+<text x="831.8" y="348" text-anchor="middle" font-size="12" fill="#5c5668" font-family="-apple-system, BlinkMacSystemFont, SF Pro Text, Segoe UI, sans-serif">Авг</text>
+</svg></div>
+      <details class="more">
+        <summary>Подробнее</summary>
+        <div class="cat-explain"><div class='cat-explain-item'><span class='legend-dot' style='background:#FFC000'></span><div><strong>Регулярные вебинары бизнеса</strong><p>Трейдинг, Встреча с Управляющей компанией, CIB, ACM и т.д.</p></div></div><div class='cat-explain-item'><span class='legend-dot' style='background:#7F7F7F'></span><div><strong>Разовые вебинары бизнеса</strong><p>Pre-IPO Polymarket, Новый ИПИФ «Атон – Выбор эмитента» и т.д.</p></div></div><div class='cat-explain-item'><span class='legend-dot' style='background:#92D050'></span><div><strong>Радио АТОН</strong><p>Все Радио АТОН-7777, которые проводились с начала 2026 года</p></div></div><div class='cat-explain-item'><span class='legend-dot' style='background:#5B9BD5'></span><div><strong>Иное</strong><p>Утреннее собрание на деске, вебинары по темам IT, CRM, AI, налогов и т.д.</p></div></div></div>
+        <div class="table-wrap">
+          <table class="table-cats">
+            <thead>
+              <tr>
+                <th class="month-col">Месяц</th>
+                <th class='num-cell cat-col'><span class='swatch' style='background:#FFC000'></span><span class='cat-title'><span>Регулярные</span><span>вебинары</span><span>бизнеса</span></span></th><th class='num-cell cat-col'><span class='swatch' style='background:#7F7F7F'></span><span class='cat-title'><span>Разовые</span><span>вебинары</span><span>бизнеса</span></span></th><th class='num-cell cat-col'><span class='swatch' style='background:#92D050'></span><span class='cat-title'><span>Радио</span><span>АТОН</span></span></th><th class='num-cell cat-col'><span class='swatch' style='background:#5B9BD5'></span><span class='cat-title'><span>Иное</span></span></th>
+                <th class="num-cell total-col">Итого</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class='month-col dept-name'>Янв 2026</td><td class='num-cell cat-col'>3.3</td><td class='num-cell cat-col'>0.8</td><td class='num-cell cat-col'>0.3</td><td class='num-cell cat-col'>0.8</td><td class='num-cell total-col'><b>5.2</b></td></tr><tr><td class='month-col dept-name'>Фев 2026</td><td class='num-cell cat-col'>3.8</td><td class='num-cell cat-col'>0.3</td><td class='num-cell cat-col'>0.0</td><td class='num-cell cat-col'>0.7</td><td class='num-cell total-col'><b>4.8</b></td></tr><tr><td class='month-col dept-name'>Мар 2026</td><td class='num-cell cat-col'>3.6</td><td class='num-cell cat-col'>0.2</td><td class='num-cell cat-col'>0.1</td><td class='num-cell cat-col'>0.5</td><td class='num-cell total-col'><b>4.4</b></td></tr><tr><td class='month-col dept-name'>Апр 2026</td><td class='num-cell cat-col'>3.4</td><td class='num-cell cat-col'>0.2</td><td class='num-cell cat-col'>0.5</td><td class='num-cell cat-col'>0.5</td><td class='num-cell total-col'><b>4.6</b></td></tr><tr><td class='month-col dept-name'>Май 2026</td><td class='num-cell cat-col'>3.8</td><td class='num-cell cat-col'>0.0</td><td class='num-cell cat-col'>0.0</td><td class='num-cell cat-col'>0.4</td><td class='num-cell total-col'><b>4.2</b></td></tr><tr><td class='month-col dept-name'>Июн 2026</td><td class='num-cell cat-col'>4.1</td><td class='num-cell cat-col'>0.5</td><td class='num-cell cat-col'>0.7</td><td class='num-cell cat-col'>0.3</td><td class='num-cell total-col'><b>5.6</b></td></tr><tr><td class='month-col dept-name'>Июл 2026</td><td class='num-cell cat-col'>3.9</td><td class='num-cell cat-col'>0.4</td><td class='num-cell cat-col'>0.4</td><td class='num-cell cat-col'>0.6</td><td class='num-cell total-col'><b>5.3</b></td></tr><tr><td class='month-col dept-name'>Авг 2026</td><td class='num-cell cat-col'>4.0</td><td class='num-cell cat-col'>0.0</td><td class='num-cell cat-col'>0.0</td><td class='num-cell cat-col'>0.4</td><td class='num-cell total-col'><b>4.4</b></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </section>
+  </div>
+</body>
+</html>
